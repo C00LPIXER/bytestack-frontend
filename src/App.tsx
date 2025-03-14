@@ -1,10 +1,20 @@
-import { Button } from "@/components/ui/button";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "sonner";
+
+import ClientRoutes from "./routes/ClientRoutes";
+import AdminRoutes from "./routes/AdminRoutes";
 
 function App() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-svh">
-      <Button>Click me</Button>
-    </div>
+    <>
+      <Router>
+        <Toaster position="bottom-right" />
+        <Routes>
+          <Route path="/*" element={<ClientRoutes />} />
+          <Route path="/admin" element={<AdminRoutes />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 
