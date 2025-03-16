@@ -40,7 +40,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex items-center justify-between px-6 py-4 bg-black text-white drop-shadow-[0_5px_50px_rgba(255,255,255,0.2)]">
+    <nav className="flex items-center justify-between px-6 py-4 bg-black text-white drop-shadow-[0_10px_50px_rgba(255,255,255,0.2)]">
       <div className="flex items-center gap-2">
         <div className="w-40">
           <img src="/icon.svg" alt="Logo" />

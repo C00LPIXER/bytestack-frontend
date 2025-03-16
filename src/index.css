@@ -66,3 +66,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.error {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+.dark .signup-form {
+  border: 1px solid #333;
+}
