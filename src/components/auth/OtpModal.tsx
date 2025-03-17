@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { clearSignupData } from "../../redux/slices/authSlice";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { useNavigate } from "react-router-dom";
 
 interface OtpModalProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ export const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [timer, setTimer] = useState(30);
   const [isResendDisabled, setIsResendDisabled] = useState(false);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: { otp: "" },
@@ -39,7 +41,7 @@ export const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose }) => {
           toast.success("Signup successful!");
           dispatch(clearSignupData());
           onClose();
-          // Redirect or further logic
+          navigate("/login");
         }
       } catch (error: any) {
         formik.setErrors({

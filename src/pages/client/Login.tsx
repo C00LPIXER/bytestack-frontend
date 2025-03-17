@@ -1,50 +1,26 @@
-// src/pages/client/Signup.tsx
-import { useState } from "react";
+// src/pages/client/Login.tsx
 import { useFormik } from "formik";
 import { Link } from "react-router-dom";
 import { Github } from "lucide-react";
-import { signupSchema } from "@/utils/validation/schemas";
+import { loginSchema } from "@/utils/validation/schemas";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { SocialButton } from "@/components/shared/SocialButton";
-import { sendOtp } from "@/service/client/api/authApi";
-import { useDispatch, useSelector } from "react-redux";
-import { setSignupData } from "@/redux/slices/authSlice";
-import { OtpModal } from "@/components/auth/OtpModal";
 import Navbar from "@/components/client/layouts/Navbar";
 import Logo from "@/components/shared/Logo";
-import { RootState } from "@/redux/store";
 
-export default function Signup() {
-  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
-  const signupData = useSelector((state: RootState) => state.auth.signupData);
-  const dispatch = useDispatch();
-
+export default function Login() {
   const formik = useFormik({
-    initialValues: { name: "", email: "", password: "", confirmPassword: "" },
-    validationSchema: signupSchema,
+    initialValues: { email: "", password: "" },
+    validationSchema: loginSchema,
     onSubmit: async (values) => {
       try {
-        if (signupData) {
-          setIsOtpModalOpen(true);
-          return;
-        }
-        const response = await sendOtp(values.email, "otp");
-        if (response.success) {
-          dispatch(
-            setSignupData({
-              name: values.name,
-              email: values.email,
-              password: values.password,
-              otpShared: true,
-            })
-          );
-          setIsOtpModalOpen(true);
-        }
+        // Simulate login API call
+        console.log("Login successful", values);
       } catch (error: any) {
         formik.setErrors({
-          email: error.response?.data?.message || "Failed to send OTP",
+          email: error.response?.data?.message || "Login failed",
         });
       }
     },
@@ -57,29 +33,24 @@ export default function Signup() {
       <main className="flex-1 grid md:grid-cols-2 gap-8 p-6 md:p-12 dark:bg-black dark:text-white">
         <div className="flex flex-col justify-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-6">
-            Join ByteStack —<br />
-            From Bits to Epic Bytes!
+            Welcome Back to <br /> ByteStack!
           </h1>
           <p className="text-base mb-6">
-            Become part of the ultimate tech community! Sign up to explore
-            premium blogs on cybersecurity, AI, software, hardware, and beyond.
-            Share your expertise, engage in real-time discussions, and start
-            earning Bits for your contributions. With a 7-day free trial,
-            there's no better time to stack your tech wisdom. Let's get started!
-          </p>
-          <p className="text-sm italic mb-4">
-            Enjoy a 7-day free trial with full access—subscribe later for
-            $15/month or $120/year!
+            Ready to dive back into the tech world? Log in to explore
+            cutting-edge blogs on cybersecurity, AI, software, hardware, and
+            more. Pick up where you left off—share your insights, join real-time
+            discussions, and keep earning Bits. Let’s stack those epic bytes
+            together!
           </p>
           <p className="text-sm">
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <Link
-              to="/login"
+              to="/signup"
               className="text-blue-600 dark:text-blue-400 hover:underline"
             >
-              Log In
+              Sign Up
             </Link>{" "}
-            to continue!
+            now!
           </p>
         </div>
 
@@ -88,34 +59,11 @@ export default function Signup() {
             <div className="flex flex-col items-center mb-6">
               <Logo width="150px" height="35px" />
               <p className="text-gray-500 dark:text-gray-400 text-sm">
-                Create Your ByteStack Account
+                Log in to Your ByteStack Account
               </p>
             </div>
 
             <form onSubmit={formik.handleSubmit} className="space-y-4 w-full">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Full Name
-                </label>
-                <Input
-                  id="name"
-                  name="name"
-                  placeholder="John Doe"
-                  value={formik.values.name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="w-full border rounded-md p-2"
-                />
-                {formik.touched.name && formik.errors.name && (
-                  <span className="text-red-500 text-sm">
-                    {formik.errors.name}
-                  </span>
-                )}
-              </div>
-
               <div>
                 <label
                   htmlFor="email"
@@ -161,33 +109,11 @@ export default function Signup() {
                 />
               </div>
 
-              <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Confirm Password
-                </label>
-                <PasswordInput
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  placeholder="••••••••"
-                  value={formik.values.confirmPassword}
-                  onChange={formik.handleChange}
-                  error={
-                    formik.touched.confirmPassword &&
-                    formik.errors.confirmPassword
-                      ? formik.errors.confirmPassword
-                      : ""
-                  }
-                />
-              </div>
-
               <Button
                 type="submit"
                 className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
               >
-                Create Account
+                Log In
               </Button>
 
               <div className="flex gap-4 mt-4">
@@ -224,11 +150,6 @@ export default function Signup() {
                 />
               </div>
             </form>
-
-            <OtpModal
-              isOpen={isOtpModalOpen}
-              onClose={() => setIsOtpModalOpen(false)}
-            />
           </div>
         </div>
       </main>
