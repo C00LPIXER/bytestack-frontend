@@ -1,7 +1,10 @@
 import * as Yup from "yup";
 
 export const signupSchema = Yup.object({
-  name: Yup.string().min(1, "Name is required").required("Name is required"),
+  name: Yup.string()
+    .min(2, "Name must be at least 2 characters")
+    .matches(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces")
+    .required("Name is required"),
   email: Yup.string()
     .matches(
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,

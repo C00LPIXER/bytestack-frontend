@@ -9,14 +9,16 @@ import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { SocialButton } from "@/components/shared/SocialButton";
 import { sendOtp } from "@/service/client/api/authApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSignupData } from "@/redux/slices/authSlice";
 import { OtpModal } from "@/components/auth/OtpModal";
 import Navbar from "@/components/client/layouts/Navbar";
 import Logo from "@/components/shared/Logo";
+import { RootState } from "@/redux/store";
 
 export default function Signup() {
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const signupData = useSelector((state: RootState) => state.auth.signupData);
   const dispatch = useDispatch();
 
   const formik = useFormik({
@@ -24,6 +26,11 @@ export default function Signup() {
     validationSchema: signupSchema,
     onSubmit: async (values) => {
       try {
+        if (signupData) {
+          console.log(signupData);
+          setIsOtpModalOpen(true);
+          return;
+        }
         const response = await sendOtp(values.email, "otp");
         if (response.success) {
           dispatch(
@@ -31,6 +38,7 @@ export default function Signup() {
               name: values.name,
               email: values.email,
               password: values.password,
+              otpShared: true,
             })
           );
           setIsOtpModalOpen(true);

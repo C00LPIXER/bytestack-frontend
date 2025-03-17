@@ -17,10 +17,9 @@ export const sendOtp = async (
       type,
     },
     {
-      withCredentials: true, // Important for cross-origin cookies or sessions
+      withCredentials: true,
     }
   );
-  console.log(email, type);
   return response.data;
 };
 
@@ -31,7 +30,7 @@ export const signup = async (data: {
   otp: string;
 }): Promise<ApiResponse> => {
   const response = await clientAxiosInstance.post("/auth/signup", data, {
-    withCredentials: true, // Important for cross-origin cookies or sessions
+    withCredentials: true,
   });
   return response.data;
 };

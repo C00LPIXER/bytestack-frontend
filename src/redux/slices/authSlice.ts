@@ -5,6 +5,7 @@ interface AuthState {
     name: string;
     email: string;
     password: string;
+    otpShared: boolean;
   } | null;
 }
 
@@ -18,7 +19,12 @@ const authSlice = createSlice({
   reducers: {
     setSignupData(
       state,
-      action: PayloadAction<{ name: string; email: string; password: string }>
+      action: PayloadAction<{
+        name: string;
+        email: string;
+        password: string;
+        otpShared: boolean;
+      }>
     ) {
       state.signupData = action.payload;
     },
