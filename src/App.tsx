@@ -9,14 +9,14 @@ import { store } from "./redux/store";
 function App() {
   return (
     <>
-    <Provider store={store}>
-      <Router>
-        <Toaster position="bottom-right" />
-        <Routes>
-          <Route path="/*" element={<ClientRoutes />} />
-          <Route path="/admin" element={<AdminRoutes />} />
-        </Routes>
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <Toaster position="bottom-right" closeButton />
+          <Routes>
+            <Route path="/*" element={<ClientRoutes />} />
+            <Route path="/admin" element={<AdminRoutes />} />
+          </Routes>
+        </Router>
       </Provider>
     </>
   );

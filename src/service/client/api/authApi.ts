@@ -49,3 +49,14 @@ export const resetPassword = async (data: {
   );
   return response.data;
 };
+
+export const signin = async (data: {
+  email: string;
+  password: string;
+}): Promise<ApiResponse> => {
+  const response = await clientAxiosInstance.post("/auth/signin", data, {
+    withCredentials: true,
+  });
+
+  return response.data;
+};

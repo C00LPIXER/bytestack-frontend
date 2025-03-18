@@ -59,6 +59,9 @@
 }
 
 @layer base {
+  :root {
+    --font-futuristic: "Orbitron", sans-serif;
+  }
   * {
     @apply border-border;
   }
@@ -66,7 +69,6 @@
     @apply bg-background text-foreground;
   }
 }
-
 
 .error {
   color: red;

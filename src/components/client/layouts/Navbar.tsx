@@ -1,3 +1,7 @@
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import { Moon, Sun, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -5,13 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link } from "react-router";
-import { useState, useEffect } from "react";
-import { Moon, Sun, Menu } from "lucide-react";
 
 const Navbar = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [mounted, setMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -39,13 +43,36 @@ const Navbar = () => {
     }
   };
 
+  useEffect(() => {
+    const controlNavbar = () => {
+      if (window.scrollY > lastScrollY && window.scrollY > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      setLastScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", controlNavbar);
+    return () => window.removeEventListener("scroll", controlNavbar);
+  }, [lastScrollY]);
+
   return (
-    <nav className="flex items-center justify-between px-6 py-4 bg-black text-white drop-shadow-[0_10px_50px_rgba(255,255,255,0.2)]">
+    <motion.nav
+      initial={{ y: 0 }}
+      animate={{ y: isVisible ? 0 : -100 }}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
+      className="fixed top-0 left-0 w-full flex items-center justify-between px-6 py-4 bg-black text-white shadow-lg z-50 backdrop-blur-md drop-shadow-[0_10px_50px_rgba(255,255,255,0.2)]"
+    >
       <div className="flex items-center gap-2">
         <div className="w-40">
-          <img src="/icon.svg" alt="Logo" />
+          <Link to="/">
+            <img src="/icon.svg" alt="Logo" />
+          </Link>
         </div>
       </div>
+
+      {/* Desktop Navigation */}
       <div className="hidden md:flex items-center gap-6">
         <Link to="/blogs" className="text-white hover:text-gray-300">
           Blogs
@@ -54,7 +81,10 @@ const Navbar = () => {
           Topics
         </Link>
         <Link to="/login" className="text-white hover:text-gray-300">
-          Sign in
+          Login
+        </Link>
+        <Link to="/signup" className="text-white hover:text-gray-300">
+          Sign Up
         </Link>
         {mounted && (
           <button
@@ -68,39 +98,59 @@ const Navbar = () => {
             )}
           </button>
         )}
-        <Link to="/signup">
-          <Button className="bg-white text-black hover:bg-gray-200 rounded-md">
-            Get Started
-          </Button>
-        </Link>
       </div>
+
+      {/* Mobile Navigation */}
       <div className="md:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost">
+            <Button
+              variant="ghost"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
               <Menu className="h-6 w-6 text-white" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-48 bg-black text-white">
-            <DropdownMenuItem>
-              <Link to="/blogs">Blogs</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to="/topics">Topics</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to="/login">Sign in</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to="/signup">Sign Up</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={toggleTheme}>
-              {theme === "dark" ? "Light Mode" : "Dark Mode"}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="absolute right-4 top-16 w-48 bg-black text-white shadow-lg rounded-md"
+              >
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Link to="/blogs" onClick={() => setMobileMenuOpen(false)}>
+                      Blogs
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/topics" onClick={() => setMobileMenuOpen(false)}>
+                      Topics
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                      Sign in
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>
+                      Sign Up
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={toggleTheme}>
+                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </DropdownMenu>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 
