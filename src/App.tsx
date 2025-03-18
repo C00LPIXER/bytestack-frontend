@@ -1,16 +1,18 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Toaster } from "sonner";
 import { Provider } from "react-redux";
+import { store } from "./redux/store";
+import { Toaster } from "sonner";
 
 import ClientRoutes from "./routes/ClientRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
-import { store } from "./redux/store";
+import ScrollToTop from "./utils/ScrollToTop";
 
 function App() {
   return (
     <>
       <Provider store={store}>
         <Router>
+          <ScrollToTop />
           <Toaster position="bottom-right" closeButton />
           <Routes>
             <Route path="/*" element={<ClientRoutes />} />

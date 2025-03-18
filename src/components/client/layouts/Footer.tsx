@@ -1,12 +1,13 @@
 import { Twitter, Linkedin, Github } from "lucide-react";
-const Footer = () => {
+
+export const Footer = () => {
   return (
     <footer className="bg-black pt-12 dark:text-white drop-shadow-[0_10px_50px_rgba(255,255,255,0.2)] text-white py-12 px-6 md:px-12 lg:px-24 mt-auto">
       <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
         <div>
           <div className="flex items-center gap-2 mb-4">
             <div className="w-40">
-            <img src="/icon.svg" alt="Logo" />
+              <img src="/icon.svg" alt="Logo" />
             </div>
           </div>
           <p className="text-sm text-gray-400 mb-4">
@@ -117,5 +118,3 @@ const Footer = () => {
     </footer>
   );
 };
-
-export default Footer;

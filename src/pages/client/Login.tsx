@@ -1,36 +1,40 @@
-// src/pages/client/Login.tsx
+import { LoadingButton } from "@/components/shared/LoadingButton";
+import { PasswordInput } from "@/components/shared/PasswordInput";
+import { SocialButton } from "@/components/shared/SocialButton";
+import { loginSchema } from "@/utils/validation/schemas";
+import { Navbar } from "@/components/client/layouts/Navbar";
+import { useState } from "react";
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import { Github } from "lucide-react";
-import { loginSchema } from "@/utils/validation/schemas";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { PasswordInput } from "@/components/shared/PasswordInput";
-import { SocialButton } from "@/components/shared/SocialButton";
-import Navbar from "@/components/client/layouts/Navbar";
-import Logo from "@/components/shared/Logo";
-import Footer from "@/components/client/layouts/Footer";
+import { Logo } from "@/components/shared/Logo";
 import { signin } from "@/service/client/api/authApi";
 import { toast } from "sonner";
+import { Footer } from "@/components/client/layouts/Footer";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false); // Added loading state
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: loginSchema,
     onSubmit: async (values) => {
+      setIsLoading(true); // Disable button and show loader
       try {
         const response = await signin(values);
         if (response.success) {
           toast.success(response.message);
-          navigate("/");
+          // navigate("/");
           //!Other login you need right here
         }
       } catch (error: any) {
         formik.setErrors({
           email: error.response?.data?.message || "Login failed",
         });
+      } finally {
+        setIsLoading(false); // Re-enable button after request completes
       }
     },
   });
@@ -38,9 +42,9 @@ export default function Login() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen pt-12 flex flex-col">
+      <div className="min-h-screen flex flex-col">
         <main className="flex-1 grid md:grid-cols-2 gap-8 p-6 md:p-12 dark:bg-black dark:text-white">
-          <div className="flex flex-col justify-center">
+          <div className="md:flex hidden flex-col justify-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-6">
               Welcome Back to <br /> ByteStack!
             </h1>
@@ -89,6 +93,7 @@ export default function Login() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     className="w-full border rounded-md p-2"
+                    disabled={isLoading} // Disable input during loading
                   />
                   {formik.touched.email && formik.errors.email && (
                     <span className="text-red-500 text-sm">
@@ -115,20 +120,24 @@ export default function Login() {
                         ? formik.errors.password
                         : ""
                     }
+                    disabled={isLoading} // Disable input during loading
                   />
                 </div>
 
-                <Button
+                <LoadingButton
                   type="submit"
                   className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                  isLoading={isLoading}
+                  loadingText="Logging In..."
                 >
                   Log In
-                </Button>
+                </LoadingButton>
 
                 <div className="flex gap-4 mt-4">
                   <SocialButton
                     icon={<Github className="h-5 w-5" />}
                     text="GitHub"
+                    disabled={isLoading} // Disable social buttons during loading
                   />
                   <SocialButton
                     icon={
@@ -156,6 +165,7 @@ export default function Login() {
                       </svg>
                     }
                     text="Google"
+                    disabled={isLoading} // Disable social buttons during loading
                   />
                 </div>
               </form>

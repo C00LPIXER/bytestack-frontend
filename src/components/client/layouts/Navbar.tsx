@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const Navbar = () => {
+export const Navbar = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -153,5 +153,3 @@ const Navbar = () => {
     </motion.nav>
   );
 };
-
-export default Navbar;

@@ -4,7 +4,7 @@ type LogoProps = {
   height?: string;
 };
 
-const Logo: React.FC<LogoProps> = ({
+export const Logo: React.FC<LogoProps> = ({
   theme,
   width = "100px",
   height = "100px",
@@ -33,5 +33,3 @@ const Logo: React.FC<LogoProps> = ({
     </svg>
   );
 };
-
-export default Logo;

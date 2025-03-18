@@ -1,24 +1,24 @@
-// src/pages/client/Signup.tsx
 import { useState } from "react";
 import { useFormik } from "formik";
 import { Link } from "react-router-dom";
 import { Github } from "lucide-react";
 import { signupSchema } from "@/utils/validation/schemas";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { sendOtp } from "@/service/client/api/authApi";
+import { LoadingButton } from "@/components/shared/LoadingButton";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { SocialButton } from "@/components/shared/SocialButton";
-import { sendOtp } from "@/service/client/api/authApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignupData } from "@/redux/slices/authSlice";
-import { OtpModal } from "@/components/auth/OtpModal";
-import Navbar from "@/components/client/layouts/Navbar";
-import Logo from "@/components/shared/Logo";
+import { OtpModal } from "@/components/shared/OtpModal";
+import { Navbar } from "@/components/client/layouts/Navbar";
+import { Logo } from "@/components/shared/Logo";
 import { RootState } from "@/redux/store";
-import Footer from "@/components/client/layouts/Footer";
+import { Footer } from "@/components/client/layouts/Footer";
 
 export default function Signup() {
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const signupData = useSelector((state: RootState) => state.auth.signupData);
   const dispatch = useDispatch();
 
@@ -26,6 +26,7 @@ export default function Signup() {
     initialValues: { name: "", email: "", password: "", confirmPassword: "" },
     validationSchema: signupSchema,
     onSubmit: async (values) => {
+      setIsLoading(true);
       try {
         if (signupData) {
           setIsOtpModalOpen(true);
@@ -47,6 +48,8 @@ export default function Signup() {
         formik.setErrors({
           email: error.response?.data?.message || "Failed to send OTP",
         });
+      } finally {
+        setIsLoading(false);
       }
     },
   });
@@ -54,9 +57,9 @@ export default function Signup() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen pt-12 flex flex-col">
+      <div className="min-h-screen flex flex-col">
         <main className="flex-1 grid md:grid-cols-2 gap-8 p-6 md:p-12 dark:bg-black dark:text-white">
-          <div className="flex flex-col justify-center">
+          <div className="md:flex hidden flex-col justify-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-6">
               Join ByteStack —<br />
               From Bits to Epic Bytes!
@@ -110,6 +113,7 @@ export default function Signup() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     className="w-full border rounded-md p-2"
+                    disabled={isLoading}
                   />
                   {formik.touched.name && formik.errors.name && (
                     <span className="text-red-500 text-sm">
@@ -134,6 +138,7 @@ export default function Signup() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     className="w-full border rounded-md p-2"
+                    disabled={isLoading}
                   />
                   {formik.touched.email && formik.errors.email && (
                     <span className="text-red-500 text-sm">
@@ -160,6 +165,7 @@ export default function Signup() {
                         ? formik.errors.password
                         : ""
                     }
+                    disabled={isLoading}
                   />
                 </div>
 
@@ -182,20 +188,24 @@ export default function Signup() {
                         ? formik.errors.confirmPassword
                         : ""
                     }
+                    disabled={isLoading}
                   />
                 </div>
 
-                <Button
+                <LoadingButton
                   type="submit"
                   className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+                  isLoading={isLoading}
+                  loadingText="Creating Account..."
                 >
                   Create Account
-                </Button>
+                </LoadingButton>
 
                 <div className="flex gap-4 mt-4">
                   <SocialButton
                     icon={<Github className="h-5 w-5" />}
                     text="GitHub"
+                    disabled={isLoading}
                   />
                   <SocialButton
                     icon={
@@ -223,6 +233,7 @@ export default function Signup() {
                       </svg>
                     }
                     text="Google"
+                    disabled={isLoading}
                   />
                 </div>
               </form>
