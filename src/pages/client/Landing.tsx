@@ -9,7 +9,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col dark:bg-black">
       <Navbar />
-      <main className="flex-1 pt-12">
+      <main className="flex-1">
         <HeroSection />
         <KnowledgeSection />
         <TechMindsSection />

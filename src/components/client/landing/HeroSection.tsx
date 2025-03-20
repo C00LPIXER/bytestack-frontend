@@ -3,7 +3,7 @@ import Lottie from "lottie-react";
 import header_animation from "@/assets/animations/header-animation.json";
 
 export const HeroSection = () => (
-  <section className="py-12 px-4 sm:px-6 md:px-12 lg:px-24 dark:text-white bg-gradient-to-b from-white to-gray-100 dark:from-black dark:to-[#1e1e1e]">
+  <section className="py-24 px-4 sm:px-6 md:px-12 lg:px-24 dark:text-white bg-gradient-to-b from-white to-gray-100 dark:from-black dark:to-[#1e1e1e]">
     <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
       <div className="text-center md:text-left space-y-6">
         <h1 className="text-4xl sm:text-5xl font-bold">

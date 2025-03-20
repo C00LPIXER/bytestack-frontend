@@ -2,7 +2,7 @@ import { Twitter, Linkedin, Github } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="bg-black pt-12 dark:text-white drop-shadow-[0_10px_50px_rgba(255,255,255,0.2)] text-white py-12 px-6 md:px-12 lg:px-24 mt-auto">
+    <footer className="bg-black dark:text-white drop-shadow-[0_10px_50px_rgba(255,255,255,0.2)] text-white py-12 px-6 md:px-12 lg:px-24 mt-auto">
       <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
         <div>
           <div className="flex items-center gap-2 mb-4">
