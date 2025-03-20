@@ -54,7 +54,7 @@ export const signin = async (data: {
   email: string;
   password: string;
 }): Promise<ApiResponse> => {
-  const response = await clientAxiosInstance.post("/auth/signin", data, {
+  const response = await clientAxiosInstance.post("/auth/login", data, {
     withCredentials: true,
   });
 
