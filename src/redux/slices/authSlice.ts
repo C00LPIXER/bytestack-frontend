@@ -26,10 +26,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<User>) {
+      console.log(action);
       state.user = action.payload;
     },
-    clearUser(state) {
-      state.user = null;
+    clearUser() {
+      return { ...initialState };
     },
     setSignupData(
       state,

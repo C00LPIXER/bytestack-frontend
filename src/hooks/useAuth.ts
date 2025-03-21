@@ -1,9 +1,9 @@
+import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setUser, clearUser } from "@/redux/slices/authSlice";
 import { fetchUser, logout as logoutApi } from "@/service/client/api/authApi";
-import { useEffect } from "react";
 
 export const useAuth = () => {
   const dispatch = useDispatch();
@@ -14,6 +14,7 @@ export const useAuth = () => {
     queryKey: ["user"],
     queryFn: async () => {
       const userData = await fetchUser();
+      console.log("useQuery fetchUser:", userData);
       if (userData) {
         dispatch(setUser(userData));
       } else {
@@ -21,17 +22,12 @@ export const useAuth = () => {
       }
       return userData;
     },
-    initialData: user,
+    enabled: !!user, // Only fetch if user is already in Redux
+    refetchOnMount: "always", // Fetch on mount if enabled
+    refetchInterval: !!user ? 5 * 60 * 1000 : false, // 5 minutes if logged in
+    staleTime: 0,
     retry: false,
-    enabled: !!user, // Only fetch if user is present in Redux
   });
-
-  // Ensure the query runs after rehydration
-  useEffect(() => {
-    if (!user && !isLoading) {
-      refetch(); // Refetch user data if not present in Redux
-    }
-  }, [user, isLoading, refetch]);
 
   const isAuthenticated = !!user;
 
@@ -39,14 +35,15 @@ export const useAuth = () => {
     mutationFn: logoutApi,
     onSuccess: () => {
       dispatch(clearUser());
-      queryClient.setQueryData(["user"], null);
-      localStorage.removeItem("persist:root");
+      queryClient.removeQueries({ queryKey: ["user"] });
       window.location.href = "/login";
     },
-    onError: (error) => {
-      console.error("Logout failed:", error);
-    },
+    onError: (error) => console.error("Logout failed:", error),
   });
+
+  useEffect(() => {
+    console.log("useAuth:", { user, isAuthenticated, isLoading });
+  }, [user, isAuthenticated, isLoading]);
 
   return {
     user,
@@ -54,5 +51,6 @@ export const useAuth = () => {
     isLoading,
     error,
     logout: logoutMutation.mutate,
+    refetch,
   };
 };

@@ -4,11 +4,17 @@ import { useAuth } from "@/hooks/useAuth";
 const PublicRoute: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
-  if (isLoading) {
+  console.log("PublicRoute:", { isAuthenticated, isLoading });
+
+  if (isLoading && !isAuthenticated) {
     return <div>Loading...</div>;
   }
 
-  return isAuthenticated ? <Navigate to="/home" replace /> : <Outlet />;
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default PublicRoute;

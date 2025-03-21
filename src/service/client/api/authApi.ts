@@ -59,7 +59,7 @@ export const signin = async (data: {
 
 export const fetchUser = async (): Promise<User | null> => {
   try {
-    const response = await clientAxiosInstance.get("/auth/me");
+    const response = await clientAxiosInstance.get("/users/me");
     return response.data.user;
   } catch (error) {
     return null;
@@ -67,6 +67,5 @@ export const fetchUser = async (): Promise<User | null> => {
 };
 
 export const logout = async (): Promise<void> => {
-  const response = await clientAxiosInstance.post("/auth/logout");
-  console.log(response);
+  await clientAxiosInstance.post("/auth/logout");
 };

@@ -4,31 +4,24 @@ import storage from "redux-persist/lib/storage";
 import { encryptTransform } from "redux-persist-transform-encrypt";
 import authReducer from "./slices/authSlice";
 
-// Encryption configuration
 const encryptor = encryptTransform({
   secretKey: import.meta.env.VITE_REDUX_PERSIST_SECRET_KEY,
-  onError: (error) => {
-    console.error("Encryption error:", error);
-  },
+  onError: (error) => console.error("Encryption error:", error),
 });
 
-// Persist configuration
-const persistConfig: { key: string; storage: any; transforms: any[]; whitelist: string[] } = {
+const persistConfig = {
   key: "root",
   storage,
   transforms: [encryptor],
   whitelist: ["auth"],
 };
 
-// Combine reducers (even if there's only one for now)
-const rootReducer = combineReducers({
-  auth: authReducer,
-});
+const rootReducer = combineReducers({ auth: authReducer });
+const persistedReducer = persistReducer<ReturnType<typeof rootReducer>>(
+  persistConfig,
+  rootReducer
+);
 
-// Create persisted reducer
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-// Configure the store
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
