@@ -1,10 +1,11 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Dashboard } from "@/pages/client/Dashboard";
 import LandingPage from "@/pages/client/Landing";
 import Login from "@/pages/client/Login";
 import Signup from "@/pages/client/Signup";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import { NotFount } from "@/pages/client/NotFound";
 
 function ClientRoutes() {
   return (
@@ -19,7 +20,7 @@ function ClientRoutes() {
       </Route>
 
       <Route path="/" element={<LandingPage />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFount />} />
     </Routes>
   );
 }

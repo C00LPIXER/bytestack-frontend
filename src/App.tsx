@@ -24,7 +24,7 @@ function App() {
             <Toaster position="bottom-right" closeButton />
             <Routes>
               <Route path="/*" element={<ClientRoutes />} />
-              <Route path="/admin" element={<AdminRoutes />} />
+              <Route path="/admin/*" element={<AdminRoutes />} />
             </Routes>
           </Router>
         </PersistGate>
