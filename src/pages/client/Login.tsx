@@ -61,16 +61,6 @@ export default function Login() {
               real-time discussions, and keep earning Bits. Let’s stack those
               epic bytes together!
             </p>
-            <p className="text-sm">
-              Don't have an account?{" "}
-              <Link
-                to="/signup"
-                className="text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                Sign Up
-              </Link>{" "}
-              now!
-            </p>
           </div>
 
           <div className="flex flex-col items-center justify-center">
@@ -175,6 +165,16 @@ export default function Login() {
                   />
                 </div>
               </form>
+              <p className="text-sm pt-4 text-center">
+                Don't have an account?{" "}
+                <Link
+                  to="/signup"
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  Sign Up
+                </Link>{" "}
+                now!
+              </p>
             </div>
           </div>
         </main>

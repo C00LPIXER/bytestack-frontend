@@ -76,16 +76,6 @@ export default function Signup() {
               Enjoy a 7-day free trial with full access—subscribe later for
               $15/month or $120/year!
             </p>
-            <p className="text-sm">
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                Log In
-              </Link>{" "}
-              to continue!
-            </p>
           </div>
 
           <div className="flex flex-col items-center justify-center">
@@ -237,6 +227,16 @@ export default function Signup() {
                   />
                 </div>
               </form>
+              <p className="text-sm pt-4 text-center">
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  Log In
+                </Link>{" "}
+                to continue!
+              </p>
 
               <OtpModal
                 isOpen={isOtpModalOpen}

@@ -99,21 +99,28 @@ export const Navbar = () => {
         {isAuthenticated ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="p-0">
-                <Avatar className="h-8 w-8">
+              <Button
+                variant="ghost"
+                className="p-0 hover:bg-transparent focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              >
+                <Avatar className="h-8 w-8 dark:bg-gray-800 bg-gray-200">
                   <AvatarImage src={user?.avatar} alt={user?.name} />
-                  <AvatarFallback>
+                  <AvatarFallback className="dark:bg-gray-800 bg-gray-200 dark:text-white text-gray-900">
                     {user?.name?.charAt(0).toUpperCase() || "U"}
                   </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64 bg-black text-white border-gray-900 rounded-lg shadow-lg p-4">
+            <DropdownMenuContent
+              className="w-64 bg-black text-white border-gray-900 rounded-lg shadow-lg p-4"
+              align="end"
+              sideOffset={5}
+            >
               {/* User Info Section */}
               <div className="flex items-center gap-3 mb-4 border-b border-gray-700 pb-3">
-                <Avatar className="h-10 w-10">
+                <Avatar className="h-10 w-10 dark:bg-gray-800 bg-gray-200">
                   <AvatarImage src={user?.avatar} alt={user?.name} />
-                  <AvatarFallback>
+                  <AvatarFallback className="dark:bg-gray-800 bg-gray-200 dark:text-white text-gray-900">
                     {user?.name?.charAt(0).toUpperCase() || "U"}
                   </AvatarFallback>
                 </Avatar>
@@ -181,7 +188,11 @@ export const Navbar = () => {
               <Menu className="h-6 w-6 text-white" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-64 bg-black text-white border-gray-700 rounded-lg shadow-lg p-4 mr-4">
+          <DropdownMenuContent
+            className="w-64 bg-black text-white border-gray-700 rounded-lg shadow-lg p-4 mr-4"
+            align="end"
+            sideOffset={5}
+          >
             {isAuthenticated ? (
               <>
                 {/* User Info Section */}
