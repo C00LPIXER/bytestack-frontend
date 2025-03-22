@@ -18,7 +18,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
-        <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+        <PersistGate persistor={persistor}>
           <Router>
             <ScrollToTop />
             <Toaster position="bottom-right" closeButton />

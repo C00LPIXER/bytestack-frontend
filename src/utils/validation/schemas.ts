@@ -45,3 +45,26 @@ export const loginSchema = Yup.object({
     )
     .required("Password is required"),
 });
+
+export const forgotPasswordSchema = Yup.object({
+  email: Yup.string()
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Please enter a valid email address"
+    )
+    .required("Email is required"),
+});
+
+// Reset Password Schema
+export const resetPasswordSchema = Yup.object({
+  newPassword: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      "Enter a valid password"
+    )
+    .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("newPassword")], "Passwords must match")
+    .required("Confirm Password is required"),
+});

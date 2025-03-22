@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -14,7 +13,6 @@ export const useAuth = () => {
     queryKey: ["user"],
     queryFn: async () => {
       const userData = await fetchUser();
-      console.log("useQuery fetchUser:", userData);
       if (userData) {
         dispatch(setUser(userData));
       } else {
@@ -23,7 +21,8 @@ export const useAuth = () => {
       return userData;
     },
     enabled: !!user, // Only fetch if user is already in Redux
-    refetchOnMount: "always", // Fetch on mount if enabled
+    refetchOnMount: false, // Fetch on mount if enabled
+    refetchOnWindowFocus: false, //automatic refetch when switching tabs
     refetchInterval: !!user ? 5 * 60 * 1000 : false, // 5 minutes if logged in
     staleTime: 0,
     retry: false,
@@ -40,10 +39,6 @@ export const useAuth = () => {
     },
     onError: (error) => console.error("Logout failed:", error),
   });
-
-  useEffect(() => {
-    console.log("useAuth:", { user, isAuthenticated, isLoading });
-  }, [user, isAuthenticated, isLoading]);
 
   return {
     user,

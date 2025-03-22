@@ -1,7 +1,6 @@
 import { clientAxiosInstance } from "@/api/client.axios";
 
 interface ApiResponse {
-  status: number;
   message: string;
   success: boolean;
 }
@@ -37,15 +36,19 @@ export const signup = async (data: {
   return response.data;
 };
 
+export const forgotPassword = async (email: string): Promise<ApiResponse> => {
+  const response = await clientAxiosInstance.post("/auth/forgot-password", {
+    email,
+    type: "forgot-password",
+  });
+  return response.data;
+};
+
 export const resetPassword = async (data: {
-  email: string;
-  password: string;
-  otp: string;
+  token: string;
+  newPassword: string;
 }): Promise<ApiResponse> => {
-  const response = await clientAxiosInstance.post(
-    "/auth/forgot-password",
-    data
-  );
+  const response = await clientAxiosInstance.post("/auth/reset-password", data);
   return response.data;
 };
 
