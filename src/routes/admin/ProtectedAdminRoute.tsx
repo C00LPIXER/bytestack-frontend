@@ -9,7 +9,7 @@ const ProtectedAdminRoute: React.FC<{ children: JSX.Element }> = ({
   const { isAuthenticated } = useSelector(
     (state: RootState) => state.adminAuth
   );
-  return isAuthenticated ? children : <Navigate to="/admin/login" />;
+  return isAuthenticated ? children : <Navigate to="/notfound" />;
 };
 
 export default ProtectedAdminRoute;

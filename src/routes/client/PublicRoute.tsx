@@ -5,8 +5,6 @@ import { Loader } from "lucide-react";
 const PublicRoute: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
-  console.log("PublicRoute:", { isAuthenticated, isLoading });
-
   if (isLoading && !isAuthenticated) {
     return  <Loader />;
   }

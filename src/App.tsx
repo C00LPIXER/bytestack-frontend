@@ -4,8 +4,8 @@ import { persistor, store } from "./redux/store";
 import { Toaster } from "sonner";
 import { PersistGate } from "redux-persist/integration/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ClientRoutes from "./routes/ClientRoutes";
-import AdminRoutes from "./routes/AdminRoutes";
+import ClientRoutes from "./routes/client/ClientRoutes";
+import AdminRoutes from "./routes/admin/AdminRoutes";
 import ScrollToTop from "./utils/ScrollToTop";
 
 const queryClient = new QueryClient({

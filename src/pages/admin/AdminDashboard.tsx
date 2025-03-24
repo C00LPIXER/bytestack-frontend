@@ -2,10 +2,9 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { Sidebar } from "@/components/admin/layouts/Sidebar";
-import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/admin/dashboard/StatCard";
 import { ChartContainer } from "@/components/admin/dashboard/ChartContainer";
+import { Sidebar } from "@/components/admin/layouts/Sidebar";
 import {
   Users,
   FileText,
