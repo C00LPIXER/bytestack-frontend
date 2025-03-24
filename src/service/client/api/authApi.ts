@@ -1,4 +1,4 @@
-import { clientAxiosInstance } from "@/api/client.axios";
+import { clientAxiosInstance } from "@/api/clientAxios";
 
 interface ApiResponse {
   message: string;
