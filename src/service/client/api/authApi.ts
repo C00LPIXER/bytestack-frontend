@@ -1,14 +1,8 @@
 import { clientAxiosInstance } from "@/api/clientAxios";
-
+import { User } from "@/types/user";
 interface ApiResponse {
   message: string;
   success: boolean;
-}
-
-interface User {
-  name: string;
-  email: string;
-  avatar: string;
 }
 
 interface SigninResponse extends ApiResponse {

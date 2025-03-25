@@ -18,7 +18,7 @@ adminAxios.interceptors.response.use(
       try {
         // Attempt to refresh the token
         const refreshResponse = await axios.post<RefreshTokenResponse>(
-          `${import.meta.env.VITE_PRIVATE_API_URI}/admin/auth/refresh-token`,
+          `${import.meta.env.VITE_PRIVATE_API_URI}/admin/refresh-token`,
           {},
           { withCredentials: true }
         );
@@ -28,13 +28,15 @@ adminAxios.interceptors.response.use(
           return adminAxios(originalRequest);
         }
       } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
         // If refresh fails, log out the admin
+        localStorage.removeItem("persist:root");
+        window.location.href = "/admin/login";
         await axios.post(
-          "${import.meta.env.VITE_PRIVATE_API_URI}/admin/auth/logout",
+          "${import.meta.env.VITE_PRIVATE_API_URI}/admin/logout",
           {},
           { withCredentials: true }
         );
-        window.location.href = "/admin/login";
         return Promise.reject(refreshError);
       }
     }

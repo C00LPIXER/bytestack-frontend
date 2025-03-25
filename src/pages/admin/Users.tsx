@@ -7,52 +7,8 @@ import { DataTable } from "@/components/shared/DataTable";
 import { Pagination } from "@/components/shared/Pagination";
 import { FilterSearch } from "@/components/shared/FilterSearch";
 import { toast } from "sonner";
-
-export interface User {
-  id: string;
-  name: string;
-  isBlogger: boolean;
-  isPremium: boolean;
-  isBanned: boolean;
-}
-
-export const dummyUsers: User[] = [
-  {
-    id: "1",
-    name: "John Doe",
-    isBlogger: true,
-    isPremium: false,
-    isBanned: false,
-  },
-  {
-    id: "2",
-    name: "Jane Smith",
-    isBlogger: false,
-    isPremium: true,
-    isBanned: true,
-  },
-  {
-    id: "3",
-    name: "Mark Johnson",
-    isBlogger: true,
-    isPremium: true,
-    isBanned: false,
-  },
-  {
-    id: "4",
-    name: "Sarah Williams",
-    isBlogger: false,
-    isPremium: false,
-    isBanned: false,
-  },
-  {
-    id: "5",
-    name: "Emily Chen",
-    isBlogger: true,
-    isPremium: false,
-    isBanned: true,
-  },
-];
+import { fetchUsers, updateUser } from "@/service/admin/api/adminApi";
+import { User } from "@/types/user";
 
 const Users: React.FC = () => {
   const navigate = useNavigate();
@@ -60,12 +16,14 @@ const Users: React.FC = () => {
     (state: RootState) => state.adminAuth
   );
 
-  const [users, setUsers] = useState<User[]>(dummyUsers);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>(dummyUsers);
+  const [users, setUsers] = useState<User[]>([]);
+  const [totalUsers, setTotalUsers] = useState(0);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(5);
+  const [pageSize] = useState(3);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -74,53 +32,69 @@ const Users: React.FC = () => {
     }
   }, [navigate, isAuthenticated]);
 
+  // Fetch users from the API
   useEffect(() => {
-    let filtered = users;
-
-    // Apply search filter
-    if (search) {
-      filtered = filtered.filter((user) =>
-        user.name.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    // Apply status filter
-    if (statusFilter !== "all") {
-      filtered = filtered.filter((user) =>
-        statusFilter === "banned" ? user.isBanned : !user.isBanned
-      );
-    }
-
-    setFilteredUsers(filtered);
-    setPage(1); // Reset to first page on filter change
-  }, [search, statusFilter, users]);
+    const loadUsers = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const status = statusFilter === "all" ? undefined : statusFilter;
+        const { users: fetchedUsers, total } = await fetchUsers(
+          page,
+          pageSize,
+          search,
+          status
+        );
+        setUsers(fetchedUsers);
+        setTotalUsers(total);
+      } catch (err) {
+        setError("Failed to load users. Please try again.");
+        toast.error("Failed to load users");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUsers();
+  }, [page, pageSize, search, statusFilter]);
 
   const handleSeeProfile = (user: User) => {
-    navigate(`/admin/users/${user.id}`);
+    navigate(`/admin/users/${user._id}`);
   };
 
-  const handleBanUser = (user: User) => {
-    setUsers((prev) =>
-      prev.map((u) => (u.id === user.id ? { ...u, isBanned: !u.isBanned } : u))
-    );
-    toast.success(
-      user.isBanned
-        ? `${user.name} has been unbanned`
-        : `${user.name} has been banned`
-    );
+  const handleBanUser = async (user: User) => {
+    try {
+      await updateUser(user._id, { isBanned: !user.isBanned });
+      setUsers((prev) =>
+        prev.map((u) =>
+          u._id === user._id ? { ...u, isBanned: !u.isBanned } : u
+        )
+      );
+      toast.success(
+        user.isBanned
+          ? `${user.name} has been unbanned`
+          : `${user.name} has been banned`
+      );
+    } catch (error) {
+      toast.error("Failed to update user status");
+    }
   };
 
-  const handleMakePremium = (user: User) => {
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === user.id ? { ...u, isPremium: !u.isPremium } : u
-      )
-    );
-    toast.success(
-      user.isPremium
-        ? `${user.name} is no longer a premium user`
-        : `${user.name} is now a premium user`
-    );
+  const handleMakePremium = async (user: User) => {
+    try {
+      await updateUser(user._id, { isPremium: !user.isSubscribed });
+      setUsers((prev) =>
+        prev.map((u) =>
+          u._id === user._id ? { ...u, isPremium: !u.isSubscribed } : u
+        )
+      );
+      toast.success(
+        user.isSubscribed
+          ? `${user.name} is no longer a premium user`
+          : `${user.name} is now a premium user`
+      );
+    } catch (error) {
+      toast.error("Failed to update user premium status");
+    }
   };
 
   const columns = [
@@ -136,7 +110,7 @@ const Users: React.FC = () => {
     {
       header: "Is Premium",
       accessor: "isPremium",
-      render: (user: User) => (user.isPremium ? "Yes" : "No"),
+      render: (user: User) => (user.isSubscribed ? "Yes" : "No"),
     },
     {
       header: "Status",
@@ -163,15 +137,10 @@ const Users: React.FC = () => {
     },
     {
       label: (user: User) =>
-        user.isPremium ? "Remove Premium" : "Make Premium",
+        user.isSubscribed ? "Remove Premium" : "Make Premium",
       onClick: handleMakePremium,
     },
   ];
-
-  const paginatedUsers = filteredUsers.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
 
   return (
     <div className="flex h-screen">
@@ -192,38 +161,49 @@ const Users: React.FC = () => {
           </p>
         </div>
 
-        <FilterSearch
-          search={search}
-          onSearchChange={setSearch}
-          filters={[
-            {
-              label: "Status",
-              key: "status",
-              options: [
-                { label: "All", value: "all" },
-                { label: "Active", value: "active" },
-                { label: "Banned", value: "banned" },
-              ],
-              value: statusFilter,
-              onChange: setStatusFilter,
-            },
-          ]}
-        />
+        {error && (
+          <div
+            className="text-center mb-4 p-4 rounded-lg"
+            style={{ backgroundColor: "#FEE2E2", color: "#DC2626" }}
+          >
+            {error}
+          </div>
+        )}
+        <div>
+          <FilterSearch
+            search={search}
+            onSearchChange={setSearch}
+            filters={[
+              {
+                label: "Status",
+                key: "status",
+                options: [
+                  { label: "All", value: "all" },
+                  { label: "Active", value: "active" },
+                  { label: "Banned", value: "banned" },
+                ],
+                value: statusFilter,
+                onChange: setStatusFilter,
+              },
+            ]}
+          />
 
-        <DataTable
-          columns={columns}
-          data={paginatedUsers}
-          actions={actions}
-          page={page}
-          pageSize={pageSize}
-        />
-
-        <Pagination
-          page={page}
-          totalItems={filteredUsers.length}
-          pageSize={pageSize}
-          onPageChange={setPage}
-        />
+          <>
+            <DataTable
+              columns={columns}
+              data={users}
+              actions={actions}
+              page={page}
+              pageSize={pageSize}
+            />
+            <Pagination
+              page={page}
+              totalItems={totalUsers}
+              pageSize={pageSize}
+              onPageChange={setPage}
+            />
+          </>
+        </div>
       </div>
     </div>
   );

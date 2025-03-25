@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { useFormik } from "formik";
 import { toast } from "sonner";
-import { Github } from "lucide-react";
 import { setAdmin } from "@/redux/slices/adminAuthSlice";
 import { adminSignin } from "@/service/admin/api/adminApi";
 import { loginSchema } from "@/utils/validation/schemas";
@@ -11,7 +10,6 @@ import { Navbar } from "@/components/client/layouts/Navbar";
 import { Footer } from "@/components/client/layouts/Footer";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { PasswordInput } from "@/components/shared/PasswordInput";
-import { SocialButton } from "@/components/shared/SocialButton";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/shared/Logo";
 
