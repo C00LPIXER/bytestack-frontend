@@ -41,7 +41,7 @@ clientAxiosInstance.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error("Token refresh failed:", refreshError);
-        localStorage.removeItem("persist:root");
+        localStorage.removeItem("persist:auth");
         window.location.href = "/login";
         return Promise.reject(refreshError);
       }

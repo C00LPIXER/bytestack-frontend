@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import { Sidebar } from "@/components/admin/layouts/Sidebar";
 import { DataTable } from "@/components/shared/DataTable";
 import { Pagination } from "@/components/shared/Pagination";
@@ -12,9 +10,6 @@ import { User } from "@/types/user";
 
 const Users: React.FC = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useSelector(
-    (state: RootState) => state.adminAuth
-  );
 
   const [users, setUsers] = useState<User[]>([]);
   const [totalUsers, setTotalUsers] = useState(0);
@@ -25,12 +20,6 @@ const Users: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/admin/login");
-      return;
-    }
-  }, [navigate, isAuthenticated]);
 
   // Fetch users from the API
   useEffect(() => {

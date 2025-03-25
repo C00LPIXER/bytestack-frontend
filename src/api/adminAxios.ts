@@ -30,7 +30,7 @@ adminAxios.interceptors.response.use(
       } catch (refreshError) {
         console.error("Token refresh failed:", refreshError);
         // If refresh fails, log out the admin
-        localStorage.removeItem("persist:root");
+        localStorage.removeItem("persist:adminAuth");
         window.location.href = "/admin/login";
         await axios.post(
           "${import.meta.env.VITE_PRIVATE_API_URI}/admin/logout",
@@ -39,6 +39,19 @@ adminAxios.interceptors.response.use(
         );
         return Promise.reject(refreshError);
       }
+    }
+
+    if (
+      error.response?.status === 403 &&
+      (error.response?.data as any)?.message === "Admin access required"
+    ) {
+      localStorage.removeItem("persist:adminAuth");
+      window.location.href = "/admin/login";
+      await axios.post(
+        "${import.meta.env.VITE_PRIVATE_API_URI}/admin/logout",
+        {},
+        { withCredentials: true }
+      );
     }
 
     return Promise.reject(error);
