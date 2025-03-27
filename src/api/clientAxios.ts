@@ -1,4 +1,6 @@
+import { clearUser } from "@/redux/slices/authSlice";
 import axios, { AxiosError, AxiosInstance } from "axios";
+import { store } from "@/redux/store";
 
 const clientAxiosInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_PRIVATE_API_URI,
@@ -42,8 +44,9 @@ clientAxiosInstance.interceptors.response.use(
           return clientAxiosInstance(originalRequest);
         }
       } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
+        store.dispatch(clearUser());
         localStorage.removeItem("persist:auth");
+
         await axios.post(
           `${import.meta.env.VITE_PRIVATE_API_URI}/admin/logout`,
           {},

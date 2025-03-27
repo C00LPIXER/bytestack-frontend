@@ -5,6 +5,8 @@ import axios, {
   AxiosRequestConfig,
 } from "axios";
 import { RefreshTokenResponse } from "@/types/auth";
+import { store } from "@/redux/store";
+import { clearAdmin } from "@/redux/slices/adminAuthSlice";
 
 const adminAxios: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_PRIVATE_API_URI,
@@ -37,7 +39,8 @@ adminAxios.interceptors.response.use(
           return adminAxios(originalRequest);
         }
       } catch (refreshError) {
-        localStorage.removeItem("persist:adminAuth");
+        store.dispatch(clearAdmin());
+
         await axios.post(
           `${import.meta.env.VITE_PRIVATE_API_URI}/admin/logout`,
           {},
@@ -53,7 +56,8 @@ adminAxios.interceptors.response.use(
       (error.response?.data as { message?: string })?.message ===
         "Admin access required"
     ) {
-      localStorage.removeItem("persist:adminAuth");
+      store.dispatch(clearAdmin());
+
       await axios.post(
         "${import.meta.env.VITE_PRIVATE_API_URI}/admin/logout",
         {},

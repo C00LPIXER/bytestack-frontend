@@ -1,4 +1,7 @@
 import { clientAxiosInstance } from "@/api/clientAxios";
+import { clearAdmin } from "@/redux/slices/adminAuthSlice";
+import { store } from "@/redux/store";
+import { ErrorResponse } from "@/types/error";
 import { User } from "@/types/user";
 interface ApiResponse {
   message: string;
@@ -55,8 +58,19 @@ export const signin = async (data: {
 };
 
 export const fetchUser = async (): Promise<User | null> => {
-  const response = await clientAxiosInstance.get("/users/me");
-  return response.data.user;
+  try {
+    const response = await clientAxiosInstance.get("/users/me");
+    return response.data.user;
+  } catch (error) {
+    if (
+      (error as ErrorResponse).response?.status === 401 ||
+      (error as ErrorResponse).response?.status === 403
+    ) {
+      store.dispatch(clearAdmin());
+      window.location.href = "/login";
+    }
+  }
+  return null;
 };
 
 export const logout = async (): Promise<void> => {
