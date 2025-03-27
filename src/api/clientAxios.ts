@@ -13,7 +13,9 @@ const refreshAxiosInstance = axios.create({
 clientAxiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as any;
+    const originalRequest = error.config as AxiosError["config"] & {
+      _retry?: boolean;
+    };
 
     const skipRefreshFor = ["/auth/login"];
     const shouldSkipRefresh = skipRefreshFor.some((url) =>
@@ -42,6 +44,12 @@ clientAxiosInstance.interceptors.response.use(
       } catch (refreshError) {
         console.error("Token refresh failed:", refreshError);
         localStorage.removeItem("persist:auth");
+        await axios.post(
+          `${import.meta.env.VITE_PRIVATE_API_URI}/admin/logout`,
+          {},
+          { withCredentials: true }
+        );
+
         window.location.href = "/login";
         return Promise.reject(refreshError);
       }

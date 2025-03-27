@@ -14,17 +14,16 @@ const Users: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(3);
+  const [pageSize] = useState(8);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
 
   // Fetch users from the API
   useEffect(() => {
     const loadUsers = async () => {
-      setLoading(true);
+      // setLoading(true);
       setError(null);
       try {
         const status = statusFilter === "all" ? undefined : statusFilter;
@@ -37,10 +36,11 @@ const Users: React.FC = () => {
         setUsers(fetchedUsers);
         setTotalUsers(total);
       } catch (err) {
+        console.error(err);
         setError("Failed to load users. Please try again.");
         toast.error("Failed to load users");
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
     loadUsers();
@@ -64,25 +64,8 @@ const Users: React.FC = () => {
           : `${user.name} has been banned`
       );
     } catch (error) {
+      console.log(error);
       toast.error("Failed to update user status");
-    }
-  };
-
-  const handleMakePremium = async (user: User) => {
-    try {
-      await updateUser(user._id, { isPremium: !user.isSubscribed });
-      setUsers((prev) =>
-        prev.map((u) =>
-          u._id === user._id ? { ...u, isPremium: !u.isSubscribed } : u
-        )
-      );
-      toast.success(
-        user.isSubscribed
-          ? `${user.name} is no longer a premium user`
-          : `${user.name} is now a premium user`
-      );
-    } catch (error) {
-      toast.error("Failed to update user premium status");
     }
   };
 
@@ -92,13 +75,17 @@ const Users: React.FC = () => {
       accessor: "name",
     },
     {
+      header: "Email",
+      accessor: "email",
+    },
+    {
       header: "Is Blogger",
       accessor: "isBlogger",
       render: (user: User) => (user.isBlogger ? "Yes" : "No"),
     },
     {
       header: "Is Premium",
-      accessor: "isPremium",
+      accessor: "isSubscribed",
       render: (user: User) => (user.isSubscribed ? "Yes" : "No"),
     },
     {
@@ -124,37 +111,27 @@ const Users: React.FC = () => {
       label: (user: User) => (user.isBanned ? "Unban" : "Ban"),
       onClick: handleBanUser,
     },
-    {
-      label: (user: User) =>
-        user.isSubscribed ? "Remove Premium" : "Make Premium",
-      onClick: handleMakePremium,
-    },
   ];
 
   return (
     <div className="flex h-screen">
       <Sidebar />
       <div
-        className="flex-1 p-6 overflow-y-auto"
-        style={{ backgroundColor: "#F7FAFC" }}
+        className="flex-1 p-6 overflow-y-auto bg-[#F7FAFC]"
       >
         <div className="mb-8">
           <h1
-            className="text-2xl font-semibold tracking-tight"
-            style={{ color: "#1A202C" }}
+            className="text-2xl font-semibold tracking-tight text-[#1A202C]"
           >
             Users
           </h1>
-          <p style={{ color: "#718096" }}>
+          <p className="text-[#718096]">
             Manage your users and their permissions.
           </p>
         </div>
 
         {error && (
-          <div
-            className="text-center mb-4 p-4 rounded-lg"
-            style={{ backgroundColor: "#FEE2E2", color: "#DC2626" }}
-          >
+          <div className="text-center mb-4 p-4 rounded-lg bg-[#FEE2E2] text-[#DC2626]">
             {error}
           </div>
         )}

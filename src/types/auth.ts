@@ -10,14 +10,14 @@ export interface LoginResponse {
     success: boolean;
   }
   
-  export interface AnalyticsResponse {
-    status: number;
-    message: string;
-    success: boolean;
-    analytics: {
-      totalUsers: number;
-      activeUsers: number;
-      bannedUsers: number;
-      adminUsers: number;
-    };
-  }
+  // export interface AnalyticsResponse {
+  //   status: number;
+  //   message: string;
+  //   success: boolean;
+  //   analytics: {
+  //     totalUsers: number;
+  //     activeUsers: number;
+  //     bannedUsers: number;
+  //     adminUsers: number;
+  //   };
+  // }

@@ -5,10 +5,10 @@ export interface User {
   avatar: string;
   links: string[];
   isBlogger: boolean;
-  isSubscribed: false;
-  subType: null;
-  subEndDate: null;
-  trialEndDate: null;
+  isSubscribed: boolean;
+  subType: string | null;
+  subEndDate: string | null;
+  trialEndDate: string | null;
   followedTopics: string[];
   techInterests: string[];
   searchHistory: string[];

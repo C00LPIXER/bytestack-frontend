@@ -14,6 +14,7 @@ import { PasswordInput } from "@/components/shared/PasswordInput";
 import { SocialButton } from "@/components/shared/SocialButton";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/shared/Logo";
+import { ErrorResponse } from "@/types/error";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ export default function Login() {
         navigate("/dashboard");
       }
     },
-    onError: (error: any) => {
+    onError: (error: ErrorResponse) => {
       formik.setErrors({
         email: error.response?.data?.message || "Login failed",
       });
@@ -89,7 +90,7 @@ export default function Login() {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     className="w-full border rounded-md p-2"
-                    disabled={signinMutation.isPending} // Disable input during loading
+                    disabled={signinMutation.isPending}
                   />
                   {formik.touched.email && formik.errors.email && (
                     <span className="text-red-500 text-sm">
@@ -126,7 +127,7 @@ export default function Login() {
                         ? formik.errors.password
                         : ""
                     }
-                    disabled={signinMutation.isPending} // Disable input during loading
+                    disabled={signinMutation.isPending}
                   />
                 </div>
 
@@ -143,7 +144,7 @@ export default function Login() {
                   <SocialButton
                     icon={<Github className="h-5 w-5" />}
                     text="GitHub"
-                    disabled={signinMutation.isPending} // Disable social buttons during loading
+                    disabled={signinMutation.isPending}
                   />
                   <SocialButton
                     icon={
@@ -171,7 +172,7 @@ export default function Login() {
                       </svg>
                     }
                     text="Google"
-                    disabled={signinMutation.isPending} // Disable social buttons during loading
+                    disabled={signinMutation.isPending}
                   />
                 </div>
               </form>

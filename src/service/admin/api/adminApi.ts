@@ -31,19 +31,18 @@ export const fetchUsers = async (
       users: response.data.data,
       total: response.data.meta.total,
     };
-  } catch (error) {
+  } catch {
     throw new Error("Failed to fetch users");
   }
 };
 
-// Update user (ban/unban, make/remove premium)
 export const updateUser = async (
   userId: string,
-  data: { isBanned?: boolean; isPremium?: boolean }
+  data: { isBanned?: boolean }
 ): Promise<void> => {
   try {
     await adminAxios.patch(`/admin/users/${userId}`, data);
-  } catch (error) {
+  } catch {
     throw new Error("Failed to update user");
   }
 };

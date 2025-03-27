@@ -22,6 +22,7 @@ import { SidebarItem } from "./SidebarItem";
 import { SidebarSection } from "./SidebarSection";
 import { ConfirmationDialog } from "@/components/shared/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
+import { persistor } from "@/redux/store";
 
 export const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);
@@ -37,10 +38,16 @@ export const Sidebar = () => {
     try {
       await adminLogout();
       dispatch(clearAdmin());
+      await persistor.flush();
+      localStorage.removeItem("persist:adminAuth");
+      persistor.persist();
       toast.success("Logged out successfully");
       navigate("/admin/login");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Logout failed");
+    } catch (err) {
+      const errorMessage =
+        (err as unknown as { response?: { data?: { message?: string } } })
+          ?.response?.data?.message || "Logout failed";
+      toast.error(errorMessage);
     }
   };
 
@@ -62,9 +69,7 @@ export const Sidebar = () => {
           }}
         >
           {expanded && (
-            <h1
-              className="font-semibold text-xl tracking-tight text-[#FFFFFF]"
-            >
+            <h1 className="font-semibold text-xl tracking-tight text-[#FFFFFF]">
               ByteStack
             </h1>
           )}

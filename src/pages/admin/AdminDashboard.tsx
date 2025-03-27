@@ -24,8 +24,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { Button } from "@/components/ui/button";
 
-// Sample data for charts
 const userGrowthData = [
   { name: "Jan", users: 400 },
   { name: "Feb", users: 500 },
@@ -129,7 +129,6 @@ const AdminDashboard: React.FC = () => {
     }
   }, [navigate, isAuthenticated]);
 
-  // Static colors (removed dynamic theme logic)
   const colors = {
     primary: "#4299E1", // Blue for charts
     secondary: "#A0AEC0", // Gray for secondary chart elements
@@ -168,10 +167,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="flex h-screen">
       <Sidebar />
-      <div
-        className="flex-1 p-6 overflow-y-auto"
-        style={{ backgroundColor: "#F7FAFC" }} // Light gray background
-      >
+      <div className="flex-1 p-6 overflow-y-auto bg-[#F7FAFC]">
         <div className="animate-fade-in">
           <div className="mb-8">
             <h1
@@ -180,7 +176,7 @@ const AdminDashboard: React.FC = () => {
             >
               Dashboard Overview
             </h1>
-            <p style={{ color: "#718096" }}>
+            <p className="text-[#718096]">
               Welcome back, {admin?.email}! Here's what's happening.
             </p>
           </div>
@@ -305,26 +301,17 @@ const AdminDashboard: React.FC = () => {
             </ChartContainer>
           </div>
 
-          {/* <div className="grid gap-6 lg:grid-cols-3 mb-6">
-            <div
-              className="stat-card rounded-lg p-5 shadow-sm"
-              style={{
-                backgroundColor: "#FFFFFF",
-                border: "1px solid #E2E8F0",
-              }}
-            >
+          <div className="grid gap-6 lg:grid-cols-3 mb-6">
+            <div className="stat-card rounded-lg p-5 shadow-sm bg-white border border-gray-200">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
-                  <FileText size={18} style={{ color: "#718096" }} />
-                  <h3 className="font-medium" style={{ color: "#1A202C" }}>
-                    Pending Topics
-                  </h3>
+                  <FileText size={18} className="text-gray-500" />
+                  <h3 className="font-medium text-gray-800">Pending Topics</h3>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-xs h-8 px-2"
-                  style={{ color: "#4299E1" }}
+                  className="text-xs h-8 px-2 text-blue-500 hover:bg-slate-400"
                 >
                   View All <ChevronRight size={14} className="ml-1" />
                 </Button>
@@ -334,31 +321,20 @@ const AdminDashboard: React.FC = () => {
                 {pendingTopics.map((topic) => (
                   <div
                     key={topic.id}
-                    className="flex items-center justify-between border-b pb-3 last:border-0"
-                    style={{ borderColor: "#E2E8F0" }}
+                    className="flex items-center justify-between border-b pb-3 last:border-0 border-gray-200"
                   >
                     <div>
-                      <p
-                        className="font-medium text-sm line-clamp-1"
-                        style={{ color: "#1A202C" }}
-                      >
+                      <p className="font-medium text-sm line-clamp-1 text-gray-800">
                         {topic.title}
                       </p>
-                      <p
-                        className="text-xs mt-0.5"
-                        style={{ color: "#718096" }}
-                      >
+                      <p className="text-xs mt-0.5 text-gray-500">
                         By {topic.author} • {topic.date}
                       </p>
                     </div>
                     <Button
                       size="sm"
-                      variant="outline"
-                      className="h-8"
-                      style={{
-                        borderColor: "#E2E8F0",
-                        color: "#4299E1",
-                      }}
+                      variant="ghost"
+                      className="h-8 text-blue-400 hover:bg-transparent hover:text-gray-600"
                     >
                       Review
                     </Button>
@@ -367,13 +343,7 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div
-              className="stat-card rounded-lg p-5 shadow-sm"
-              style={{
-                backgroundColor: "#FFFFFF",
-                border: "1px solid #E2E8F0",
-              }}
-            >
+            <div className="stat-card rounded-lg p-5 shadow-sm bg-white border border-gray-200">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <CreditCard size={18} style={{ color: "#718096" }} />
@@ -384,8 +354,7 @@ const AdminDashboard: React.FC = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-xs h-8 px-2"
-                  style={{ color: "#4299E1" }}
+                  className="text-xs h-8 px-2 text-[#4299E1]  hover:bg-slate-400"
                 >
                   View All <ChevronRight size={14} className="ml-1" />
                 </Button>
@@ -430,9 +399,8 @@ const AdminDashboard: React.FC = () => {
             </div>
 
             <div
-              className="stat-card rounded-lg p-5 shadow-sm"
+              className="stat-card rounded-lg p-5 shadow-sm bg-white"
               style={{
-                backgroundColor: "#FFFFFF",
                 border: "1px solid #E2E8F0",
               }}
             >
@@ -446,8 +414,7 @@ const AdminDashboard: React.FC = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-xs h-8 px-2"
-                  style={{ color: "#4299E1" }}
+                  className="text-xs h-8 px-2 text-[#4299E1] hover:bg-slate-400"
                 >
                   View All <ChevronRight size={14} className="ml-1" />
                 </Button>
@@ -484,8 +451,8 @@ const AdminDashboard: React.FC = () => {
                       </span>
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="h-8"
+                        variant="ghost"
+                        className="h-8 text-blue-400 hover:bg-transparent hover:text-gray-600"
                       >
                         Review
                       </Button>
@@ -494,7 +461,7 @@ const AdminDashboard: React.FC = () => {
                 ))}
               </div>
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

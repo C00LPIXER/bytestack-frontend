@@ -22,8 +22,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex items-center justify-between mt-4">
       <div
-        className="text-sm"
-        style={{ color: "#718096" }}
+        className="text-sm text-[#718096]"
       >
         Showing {(page - 1) * pageSize + 1} to{" "}
         {Math.min(page * pageSize, totalItems)} of {totalItems} entries
@@ -34,10 +33,9 @@ export const Pagination: React.FC<PaginationProps> = ({
           size="sm"
           onClick={() => onPageChange(page - 1)}
           disabled={page === 1}
-          style={{
-            borderColor: "#E2E8F0",
-            color: page === 1 ? "#A0AEC0" : "#4299E1",
-          }}
+          className={`border-[#E2E8F0] ${
+            page === 1 ? "text-[#A0AEC0]" : "text-[#c0c0c0]"
+          }`}
         >
           <ChevronLeft size={16} />
           Previous
@@ -47,10 +45,9 @@ export const Pagination: React.FC<PaginationProps> = ({
           size="sm"
           onClick={() => onPageChange(page + 1)}
           disabled={page === totalPages}
-          style={{
-            borderColor: "#E2E8F0",
-            color: page === totalPages ? "#A0AEC0" : "#4299E1",
-          }}
+          className={`border-[#E2E8F0] ${
+            page === totalPages ? "text-[#A0AEC0]" : "text-[#c0c0c0]"
+          }`}
         >
           Next
           <ChevronRight size={16} />

@@ -12,6 +12,7 @@ import { LoadingButton } from "@/components/shared/LoadingButton";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/shared/Logo";
+import { ErrorResponse } from "@/types/error";
 
 export default function AdminLogin() {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export default function AdminLogin() {
         navigate("/admin");
       }
     },
-    onError: (error: any) => {
+    onError: (error: ErrorResponse) => {
       formik.setErrors({
         email: error.response?.data?.message || "Admin login failed",
       });

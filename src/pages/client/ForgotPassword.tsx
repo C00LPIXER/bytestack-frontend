@@ -9,6 +9,7 @@ import { Footer } from "@/components/client/layouts/Footer";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/shared/Logo";
+import { ErrorResponse } from "@/types/error";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function ForgotPassword() {
         setTimeout(() => navigate("/login"), 3000);
       }
     },
-    onError: (error: any) => {
+    onError: (error: ErrorResponse) => {
       formik.setErrors({
         email: error.response?.data?.message || "Failed to send reset email",
       });
