@@ -15,6 +15,7 @@ import { Navbar } from "@/components/client/layouts/Navbar";
 import { Logo } from "@/components/shared/Logo";
 import { RootState } from "@/redux/store";
 import { Footer } from "@/components/client/layouts/Footer";
+import { ErrorResponse } from "@/types/error";
 
 export default function Signup() {
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
@@ -44,9 +45,11 @@ export default function Signup() {
           );
           setIsOtpModalOpen(true);
         }
-      } catch (error: any) {
+      } catch (error) {
         formik.setErrors({
-          email: error.response?.data?.message || "Failed to send OTP",
+          email:
+            (error as ErrorResponse).response?.data?.message ||
+            "Failed to send OTP",
         });
       } finally {
         setIsLoading(false);

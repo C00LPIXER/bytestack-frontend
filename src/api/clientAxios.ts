@@ -1,4 +1,6 @@
+import { clearUser } from "@/redux/slices/authSlice";
 import axios, { AxiosError, AxiosInstance } from "axios";
+import { store } from "@/redux/store";
 
 const clientAxiosInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_PRIVATE_API_URI,
@@ -13,7 +15,9 @@ const refreshAxiosInstance = axios.create({
 clientAxiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as any;
+    const originalRequest = error.config as AxiosError["config"] & {
+      _retry?: boolean;
+    };
 
     const skipRefreshFor = ["/auth/login"];
     const shouldSkipRefresh = skipRefreshFor.some((url) =>
@@ -40,8 +44,15 @@ clientAxiosInstance.interceptors.response.use(
           return clientAxiosInstance(originalRequest);
         }
       } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
-        localStorage.removeItem("persist:root");
+        store.dispatch(clearUser());
+        localStorage.removeItem("persist:auth");
+
+        await axios.post(
+          `${import.meta.env.VITE_PRIVATE_API_URI}/admin/logout`,
+          {},
+          { withCredentials: true }
+        );
+
         window.location.href = "/login";
         return Promise.reject(refreshError);
       }

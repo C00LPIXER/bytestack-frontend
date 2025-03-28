@@ -10,6 +10,7 @@ import { Footer } from "@/components/client/layouts/Footer";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { Logo } from "@/components/shared/Logo";
+import { ErrorResponse } from "@/types/error";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function ResetPassword() {
         navigate("/login");
       }
     },
-    onError: (error: any) => {
+    onError: (error: ErrorResponse) => {
       formik.setErrors({
         newPassword:
           error.response?.data?.message || "Failed to reset password",

@@ -3,22 +3,7 @@ import { HeroSection } from "@/components/client/landing/HeroSection";
 import { BlogList } from "@/components/client/blogs/BlogList";
 import { Sidebar } from "@/components/client/layouts/Sidebar";
 import { Footer } from "@/components/client/layouts/Footer";
-
-interface BlogPostData {
-  id: string;
-  author: {
-    name: string;
-    role: string;
-    avatar: string;
-  };
-  title: string;
-  description: string;
-  publishedDate: string;
-  readTime: string;
-  likes: number;
-  comments: number;
-  bookmarks: number;
-}
+import { BlogPostData } from "@/types/blog";
 
 const blogPosts: BlogPostData[] = [
   {

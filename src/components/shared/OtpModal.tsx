@@ -16,6 +16,7 @@ import { RootState } from "../../redux/store";
 import { clearSignupData } from "../../redux/slices/authSlice";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useNavigate } from "react-router-dom";
+import { ErrorResponse } from "@/types/error";
 
 interface OtpModalProps {
   isOpen: boolean;
@@ -43,9 +44,9 @@ export const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose }) => {
           onClose();
           navigate("/login");
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         formik.setErrors({
-          otp: error.response?.data?.message || "Invalid OTP",
+          otp: (error as ErrorResponse).response?.data?.message || "Invalid OTP",
         });
       }
     },
@@ -122,7 +123,7 @@ export const OtpModal: React.FC<OtpModalProps> = ({ isOpen, onClose }) => {
       if (response) {
         setIsResendDisabled(true);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Resend OTP error:", error);
     }
   };

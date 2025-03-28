@@ -1,44 +1,46 @@
 import { useMutation } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { useFormik } from "formik";
 import { toast } from "sonner";
-import { forgotPassword } from "@/service/client/api/authApi";
-import { forgotPasswordSchema } from "@/utils/validation/schemas";
+import { setAdmin } from "@/redux/slices/adminAuthSlice";
+import { adminSignin } from "@/service/admin/api/adminApi";
+import { loginSchema } from "@/utils/validation/schemas";
 import { Navbar } from "@/components/client/layouts/Navbar";
 import { Footer } from "@/components/client/layouts/Footer";
 import { LoadingButton } from "@/components/shared/LoadingButton";
+import { PasswordInput } from "@/components/shared/PasswordInput";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/shared/Logo";
 import { ErrorResponse } from "@/types/error";
 
-export default function ForgotPassword() {
+export default function AdminLogin() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const forgotPasswordMutation = useMutation({
-    mutationFn: forgotPassword,
+  const signinMutation = useMutation({
+    mutationFn: ({ email, password }: { email: string; password: string }) =>
+      adminSignin(email, password),
     onSuccess: (response) => {
-      if (response.success) {
-        toast.success(
-          response.message || "Password reset link sent to your email"
-        );
-        setTimeout(() => navigate("/login"), 3000);
+      if (response.success && response.admin) {
+        dispatch(setAdmin(response.admin));
+        toast.success(response.message);
+        navigate("/admin");
       }
     },
     onError: (error: ErrorResponse) => {
       formik.setErrors({
-        email: error.response?.data?.message || "Failed to send reset email",
+        email: error.response?.data?.message || "Admin login failed",
       });
-      toast.error(
-        error.response?.data?.message || "Failed to send reset email"
-      );
+      toast.error(error.response?.data?.message || "Admin login failed");
     },
   });
 
   const formik = useFormik({
-    initialValues: { email: "" },
-    validationSchema: forgotPasswordSchema,
+    initialValues: { email: "", password: "" },
+    validationSchema: loginSchema,
     onSubmit: (values) => {
-      forgotPasswordMutation.mutate(values.email);
+      signinMutation.mutate(values);
     },
   });
 
@@ -46,24 +48,13 @@ export default function ForgotPassword() {
     <>
       <Navbar />
       <div className="min-h-screen flex flex-col dark:bg-black dark:text-white">
-        <main className="flex-1 grid md:grid-cols-2 gap-8 p-6 md:p-12 dark:bg-transparent dark:text-white">
-          <div className="md:flex hidden flex-col justify-center">
-            <h1 className="text-3xl md:text-4xl font-bold mb-6">
-              Forgot Your Password? <br /> We’ve Got You Covered!
-            </h1>
-            <p className="text-base mb-6">
-              Enter your email below, and we’ll send you a secure link to reset
-              your password. Get back to exploring ByteStack’s tech blogs,
-              discussions, and more in no time!
-            </p>
-          </div>
-
+        <main className="flex-1 grid  p-6 dark:bg-transparent dark:text-white">
           <div className="flex flex-col items-center justify-center">
             <div className="w-full max-w-md">
               <div className="flex flex-col items-center mb-6">
                 <Logo width="150px" height="35px" />
                 <p className="text-gray-500 dark:text-gray-400 text-sm">
-                  Reset Your ByteStack Password
+                  Log in to Your ByteStack Admin Account
                 </p>
               </div>
 
@@ -79,12 +70,12 @@ export default function ForgotPassword() {
                     id="email"
                     name="email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="admin@example.com"
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     className="w-full border rounded-md p-2"
-                    disabled={forgotPasswordMutation.isPending}
+                    disabled={signinMutation.isPending}
                   />
                   {formik.touched.email && formik.errors.email && (
                     <span className="text-red-500 text-sm">
@@ -93,24 +84,50 @@ export default function ForgotPassword() {
                   )}
                 </div>
 
+                <div>
+                  <div>
+                    <div className="flex justify-between mb-1">
+                      <label
+                        htmlFor="password"
+                        className="block text-sm font-medium"
+                      >
+                        Password
+                      </label>
+                    </div>
+                  </div>
+                  <PasswordInput
+                    id="password"
+                    name="password"
+                    placeholder="••••••••"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.password && formik.errors.password
+                        ? formik.errors.password
+                        : ""
+                    }
+                    disabled={signinMutation.isPending}
+                  />
+                </div>
+
                 <LoadingButton
                   type="submit"
                   className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
-                  isLoading={forgotPasswordMutation.isPending}
-                  loadingText="Sending Reset Link..."
+                  isLoading={signinMutation.isPending}
+                  loadingText="Logging In..."
                 >
-                  Send Reset Link
+                  Log In as Admin
                 </LoadingButton>
               </form>
-
               <p className="text-sm pt-4 text-center">
-                Remember your password?{" "}
+                Not an admin?{" "}
                 <Link
                   to="/login"
                   className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  Log In
-                </Link>
+                  Log in as a user
+                </Link>{" "}
+                instead!
               </p>
             </div>
           </div>

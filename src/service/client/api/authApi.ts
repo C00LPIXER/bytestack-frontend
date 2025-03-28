@@ -1,14 +1,11 @@
-import { clientAxiosInstance } from "@/api/client.axios";
-
+import { clientAxiosInstance } from "@/api/clientAxios";
+import { clearAdmin } from "@/redux/slices/adminAuthSlice";
+import { store } from "@/redux/store";
+import { ErrorResponse } from "@/types/error";
+import { User } from "@/types/user";
 interface ApiResponse {
   message: string;
   success: boolean;
-}
-
-interface User {
-  name: string;
-  email: string;
-  avatar: string;
 }
 
 interface SigninResponse extends ApiResponse {
@@ -60,13 +57,40 @@ export const signin = async (data: {
   return response.data;
 };
 
+export const googleOAuthLogin = async (
+  code: string
+): Promise<SigninResponse> => {
+  const response = await clientAxiosInstance.post<SigninResponse>(
+    "/auth/google",
+    { code }
+  );
+  return response.data;
+};
+
+export const gitHubOAuthLogin = async (
+  code: string
+): Promise<SigninResponse> => {
+  const response = await clientAxiosInstance.post<SigninResponse>(
+    "/auth/github",
+    { code }
+  );
+  return response.data;
+};
+
 export const fetchUser = async (): Promise<User | null> => {
   try {
     const response = await clientAxiosInstance.get("/users/me");
     return response.data.user;
   } catch (error) {
-    return null;
+    if (
+      (error as ErrorResponse).response?.status === 401 ||
+      (error as ErrorResponse).response?.status === 403
+    ) {
+      store.dispatch(clearAdmin());
+      window.location.href = "/login";
+    }
   }
+  return null;
 };
 
 export const logout = async (): Promise<void> => {
