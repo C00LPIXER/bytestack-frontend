@@ -57,6 +57,26 @@ export const signin = async (data: {
   return response.data;
 };
 
+export const googleOAuthLogin = async (
+  code: string
+): Promise<SigninResponse> => {
+  const response = await clientAxiosInstance.post<SigninResponse>(
+    "/auth/google",
+    { code }
+  );
+  return response.data;
+};
+
+export const gitHubOAuthLogin = async (
+  code: string
+): Promise<SigninResponse> => {
+  const response = await clientAxiosInstance.post<SigninResponse>(
+    "/auth/github",
+    { code }
+  );
+  return response.data;
+};
+
 export const fetchUser = async (): Promise<User | null> => {
   try {
     const response = await clientAxiosInstance.get("/users/me");
