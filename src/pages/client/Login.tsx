@@ -46,6 +46,14 @@ export default function Login() {
     },
   });
 
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:3000/api/auth/google";
+  };
+
+  const handleGitHubLogin = () => {
+    window.location.href = "http://localhost:3000/api/auth/github";
+  };
+
   return (
     <>
       <Navbar />
@@ -139,14 +147,16 @@ export default function Login() {
                 >
                   Log In
                 </LoadingButton>
-
+                </form>
                 <div className="flex gap-4 mt-4">
                   <SocialButton
+                    onClick={handleGoogleLogin}
                     icon={<Github className="h-5 w-5" />}
                     text="GitHub"
                     disabled={signinMutation.isPending}
                   />
                   <SocialButton
+                    onClick={handleGitHubLogin}
                     icon={
                       <svg
                         className="h-5 w-5"
@@ -175,7 +185,7 @@ export default function Login() {
                     disabled={signinMutation.isPending}
                   />
                 </div>
-              </form>
+              
               <p className="text-sm pt-4 text-center">
                 Don't have an account?{" "}
                 <Link
