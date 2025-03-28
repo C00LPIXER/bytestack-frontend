@@ -5,6 +5,7 @@ import { gitHubOAuthLogin } from "@/service/client/api/authApi";
 import { googleOAuthLogin } from "@/service/client/api/authApi";
 import { setUser } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
+import { Loader } from "@/components/shared/Loader";
 
 const AuthCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -89,22 +90,14 @@ const AuthCallback: React.FC = () => {
   }, [location, navigate, googleOAuthMutation, gitHubOAuthMutation]);
 
   if (error) {
-    return (
-      <div>
-        <h2>Error</h2>
-        <p>{error}</p>
-        <button onClick={() => navigate("/login", { replace: true })}>
-          Back to Login
-        </button>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
     <div>
-      {googleOAuthMutation.isPending || gitHubOAuthMutation.isPending
-        ? "Loading..."
-        : "Redirecting..."}
+      {(googleOAuthMutation.isPending || gitHubOAuthMutation.isPending) && (
+        <Loader />
+      )}
     </div>
   );
 };
