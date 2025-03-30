@@ -6,6 +6,8 @@ import { googleOAuthLogin } from "@/service/client/api/authApi";
 import { setUser } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import { Loader } from "@/components/shared/Loader";
+import { ErrorResponse } from "@/types/error";
+import { toast } from "sonner";
 
 const AuthCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -16,15 +18,15 @@ const AuthCallback: React.FC = () => {
   const googleOAuthMutation = useMutation({
     mutationFn: googleOAuthLogin,
     onSuccess: (data) => {
-      if (data.success) {
-        dispatch(setUser(data.user));
-        navigate("/", { replace: true });
-      } else {
-        setError("Google OAuth login failed");
-      }
+      dispatch(setUser(data.user));
+      navigate("/", { replace: true });
     },
-    onError: (error: Error) => {
+    onError: (error: ErrorResponse) => {
       console.error("Google login error:", error);
+      if (error.response?.data?.message === "Your account has been banned") {
+        toast.error(error.response?.data?.message);
+        navigate("/login", { replace: true });
+      }
       setError(error.message || "Google OAuth login failed");
     },
   });
@@ -32,15 +34,14 @@ const AuthCallback: React.FC = () => {
   const gitHubOAuthMutation = useMutation({
     mutationFn: gitHubOAuthLogin,
     onSuccess: (data) => {
-      if (data.success) {
-        dispatch(setUser(data.user));
-        navigate("/", { replace: true });
-      } else {
-        setError("GitHub OAuth login failed");
-      }
+      dispatch(setUser(data.user));
+      navigate("/", { replace: true });
     },
-    onError: (error: Error) => {
-      console.error("GitHub login error:", error);
+    onError: (error: ErrorResponse) => {
+      if (error.response?.data?.message === "Your account has been banned") {
+        toast.error(error.response?.data?.message);
+        navigate("/login", { replace: true });
+      }
       setError(error.message || "GitHub OAuth login failed");
     },
   });
@@ -57,9 +58,6 @@ const AuthCallback: React.FC = () => {
         ? "google_oauth_state"
         : "github_oauth_state";
 
-      // Log the state values for debugging
-      console.log("Callback state:", state);
-      console.log(`Stored ${stateKey}:`, localStorage.getItem(stateKey));
 
       // Verify the state parameter
       const storedState = localStorage.getItem(stateKey);
@@ -78,10 +76,8 @@ const AuthCallback: React.FC = () => {
       navigate(location.pathname, { replace: true }); // Clear query params
 
       if (isGoogleCallback) {
-        console.log("Google OAuth code:", code);
         googleOAuthMutation.mutate(code);
       } else {
-        console.log("GitHub OAuth code:", code);
         gitHubOAuthMutation.mutate(code);
       }
     };

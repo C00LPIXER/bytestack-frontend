@@ -26,8 +26,8 @@ export const SidebarItem = ({
       className={cn(
         "sidebar-item flex items-center gap-3 p-2 rounded-md transition-colors",
         isActive
-          ? "bg-[#4A5568] text-white"
-          : "text-[#E2E8F0] hover:bg-[#4A5568]"
+          ? "bg-[#45474b84] text-white"
+          : "text-[#E2E8F0] hover:bg-[#45474b84]"
       )}
       style={{
         justifyContent: expanded ? "flex-start" : "center",

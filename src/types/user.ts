@@ -3,16 +3,19 @@ export interface User {
   name: string;
   email: string;
   avatar: string;
+  headline?: string;
+  bio?: string;
   links: string[];
   isBlogger: boolean;
   isSubscribed: boolean;
-  subType: string | null;
-  subEndDate: string | null;
-  trialEndDate: string | null;
+  subType: "trial" | "monthly" | "yearly" | null;
+  subEndDate: Date | null;
+  trialEndDate: Date | null;
   followedTopics: string[];
   techInterests: string[];
   searchHistory: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+  lastLogin?: Date;
   isBanned: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }

@@ -72,7 +72,7 @@ export const BlogList = ({
               variant="ghost"
               className={`pb-1 sm:pb-2 px-2 sm:px-3 text-[10px] sm:text-xs md:text-sm whitespace-nowrap ${
                 activeTab === tab.value
-                  ? "border-b-2 border-black dark:border-white font-medium"
+                  ? "font-medium"
                   : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
               }`}
               onClick={() => handleTabChange(tab.value)}

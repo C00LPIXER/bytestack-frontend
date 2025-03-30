@@ -54,7 +54,7 @@ export const Sidebar = () => {
   return (
     <aside
       className={cn(
-        "h-screen sticky top-0 transition-all duration-300 ease-in-out bg-[#2D3748] ",
+        "h-screen sticky top-0 transition-all duration-300 ease-in-out bg-[#282828] ",
         expanded ? "w-64" : "w-[70px]"
       )}
     >
