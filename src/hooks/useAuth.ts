@@ -21,7 +21,7 @@ export const useAuth = () => {
       return userData;
     },
     enabled: !!user, // Only fetch if user is already in Redux
-    retry: false,
+    retry: false, 
     refetchOnMount: false, // Fetch on mount if enabled
     refetchOnWindowFocus: false, //automatic refetch when switching tabs
     refetchInterval: user ? 5 * 60 * 1000 : false, // 5 minutes if logged in

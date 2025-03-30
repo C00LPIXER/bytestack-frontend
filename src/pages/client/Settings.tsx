@@ -1,13 +1,19 @@
-// components/settings/ProfileSection.tsx
+import { useState } from "react";
 import { Navbar } from "@/components/client/layouts/Navbar";
 import { Footer } from "@/components/client/layouts/Footer";
-import { user } from "./Profile";
-import { ProfileSection, SettingsTabs } from "@/components/client/settings/SettingsTabs";
-import { useState } from "react";
+import { SettingsTabs } from "@/components/client/settings/SettingsTabs";
+import { ProfileTab } from "@/components/client/settings/tabs/ProfileTab";
+import { AccountTab } from "@/components/client/settings/tabs/AccountTab";
+import { NotificationsTab } from "@/components/client/settings/tabs/NotificationsTab";
+import { BlogsTab } from "@/components/client/settings/tabs/BlogsTab";
+import { BitsTab } from "@/components/client/settings/tabs/BitsTab";
+import { AnalyticsTab } from "@/components/client/settings/tabs/AnalyticsTab";
+import { SubscriptionTab } from "@/components/client/settings/tabs/SubscriptionTab";
+import { useAuth } from "@/hooks/useAuth";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");
-  const profile = user;
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-100 to-white dark:from-[#1e1e1e] dark:to-black">
@@ -17,64 +23,22 @@ const Settings = () => {
           Account Settings
         </h1>
 
-        <SettingsTabs
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          profile={profile}
-        />
+        {user && (
+          <SettingsTabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            profile={user}
+          />
+        )}
 
         <div className="mt-6">
-          {activeTab === "profile" && <ProfileSection profile={profile} />}
-          {activeTab === "account" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                Manage your account settings and preferences.
-              </p>
-            </div>
-          )}
-          {activeTab === "notifications" && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">
-                Notification Preferences
-              </h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                Manage how you receive notifications.
-              </p>
-            </div>
-          )}
-          {activeTab === "blogs" && profile.isBlogger && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Blogs</h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                Manage your blog posts and content.
-              </p>
-            </div>
-          )}
-          {activeTab === "bits" && profile.isBlogger && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Bits</h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                Manage your short-form content.
-              </p>
-            </div>
-          )}
-          {activeTab === "analytics" && profile.isBlogger && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Analytics</h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                View your content performance metrics.
-              </p>
-            </div>
-          )}
-          {activeTab === "subscription" && !profile.isBlogger && (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Subscription</h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                Manage your subscription details.
-              </p>
-            </div>
-          )}
+          {activeTab === "profile" && user && <ProfileTab profile={user} />}
+          {activeTab === "subscription" && <SubscriptionTab />}
+          {activeTab === "account" && <AccountTab />}
+          {activeTab === "notifications" && <NotificationsTab />}
+          {activeTab === "blogs" && user?.isBlogger && <BlogsTab />}
+          {activeTab === "bits" && user?.isBlogger && <BitsTab />}
+          {activeTab === "analytics" && user?.isBlogger && <AnalyticsTab />}
         </div>
       </div>
       <Footer />
