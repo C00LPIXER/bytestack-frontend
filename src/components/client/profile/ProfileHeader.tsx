@@ -1,7 +1,15 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { User } from "@/types/user";
-import { Globe, Calendar, Edit, UserPlus } from "lucide-react";
+import {
+  Globe,
+  Calendar,
+  UserPlus,
+  Github,
+  Twitter,
+  Settings,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface IProfileHeader {
   profile: User;
@@ -9,6 +17,16 @@ interface IProfileHeader {
 }
 
 export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
+  const getLinkIcon = (url: string) => {
+    if (url.includes("github.com")) {
+      return <Github className="h-4 w-4" />;
+    } else if (url.includes("twitter.com")) {
+      return <Twitter className="h-4 w-4" />;
+    } else {
+      return <Globe className="h-4 w-4" />;
+    }
+  };
+
   return (
     <div className="dark:bg-transparent p-6 mb-6 border-b-2">
       <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
@@ -31,10 +49,9 @@ export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
             </div>
 
             {isCurrentUser ? (
-              <Button className="flex items-center gap-2" variant="outline">
-                <Edit className="h-4 w-4" />
-                Update
-              </Button>
+              <Link to="/settings">
+                <Settings className="h-4 w-4" />
+              </Link>
             ) : (
               <Button className="flex items-center gap-2">
                 <UserPlus className="h-4 w-4" />
@@ -46,16 +63,32 @@ export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
           <p className="mt-2 text-gray-600 dark:text-gray-300">{profile.bio}</p>
 
           <div className="flex flex-wrap gap-4 mt-4 text-sm text-gray-500 dark:text-gray-400">
-            {profile.links && (
-              <div className="flex items-center gap-1">
-                <Globe className="h-4 w-4" />
-                {profile.links[0]}
-              </div>
-            )}
+            {profile.links &&
+              profile.links.map((link, index) => (
+                <div key={index} className="flex items-center gap-1">
+                  {getLinkIcon(link)}
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {link.replace(/https?:\/\//, "")}
+                  </a>
+                </div>
+              ))}
 
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
-              <span>Joined {profile.updatedAt?.toDateString()}</span>
+              <span>
+                Joined{" "}
+                {profile.createdAt &&
+                  new Date(profile.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+              </span>
             </div>
           </div>
         </div>

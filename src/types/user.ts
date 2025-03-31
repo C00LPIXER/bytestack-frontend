@@ -14,8 +14,8 @@ export interface User {
   followedTopics: string[];
   techInterests: string[];
   searchHistory: string[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
   lastLogin?: Date;
   isBanned: boolean;
 }
