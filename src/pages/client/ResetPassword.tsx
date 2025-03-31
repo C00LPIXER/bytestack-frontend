@@ -3,7 +3,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { resetPassword } from "@/service/client/api/authApi";
+import { resetPassword } from "@/service/client/api/clientApi";
 import { resetPasswordSchema } from "@/utils/validation/schemas";
 import { Navbar } from "@/components/client/layouts/Navbar";
 import { Footer } from "@/components/client/layouts/Footer";

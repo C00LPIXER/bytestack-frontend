@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate, Link } from "react-router-dom";
 import { useFormik } from "formik";
 import { toast } from "sonner";
-import { forgotPassword } from "@/service/client/api/authApi";
+import { forgotPassword } from "@/service/client/api/clientApi";
 import { forgotPasswordSchema } from "@/utils/validation/schemas";
 import { Navbar } from "@/components/client/layouts/Navbar";
 import { Footer } from "@/components/client/layouts/Footer";

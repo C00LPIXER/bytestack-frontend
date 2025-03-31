@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { toast } from "sonner";
 import { Github } from "lucide-react";
 import { setUser } from "@/redux/slices/authSlice";
-import { googleOAuthLogin, signin } from "@/service/client/api/authApi";
+import { googleOAuthLogin, signin } from "@/service/client/api/clientApi";
 import { loginSchema } from "@/utils/validation/schemas";
 import { Navbar } from "@/components/client/layouts/Navbar";
 import { Footer } from "@/components/client/layouts/Footer";

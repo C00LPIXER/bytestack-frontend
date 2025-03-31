@@ -12,6 +12,10 @@ interface SigninResponse extends ApiResponse {
   user: User;
 }
 
+interface ProfileResponse extends ApiResponse {
+  data: User;
+}
+
 export const sendOtp = async (
   email: string,
   type: string
@@ -79,7 +83,7 @@ export const gitHubOAuthLogin = async (
 
 export const fetchUser = async (): Promise<User | null> => {
   try {
-    const response = await clientAxiosInstance.get("/users/me");
+    const response = await clientAxiosInstance.get("/profile");
     return response.data.user;
   } catch (error) {
     if (
@@ -95,4 +99,14 @@ export const fetchUser = async (): Promise<User | null> => {
 
 export const logout = async (): Promise<void> => {
   await clientAxiosInstance.post("/auth/logout");
+};
+
+export const updateProfile = async (
+  data: Partial<User>
+): Promise<ProfileResponse> => {
+  const response = await clientAxiosInstance.put<ProfileResponse>(
+    "/profile",
+    data
+  );
+  return response.data;
 };

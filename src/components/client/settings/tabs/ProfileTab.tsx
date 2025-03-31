@@ -7,13 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Upload, X } from "lucide-react";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { updateProfile } from "@/service/client/api/clientApi";
+import { toast } from "sonner";
+import { setUser } from "@/redux/slices/authSlice";
+import { ErrorResponse } from "@/types/error";
+import { useDispatch } from "react-redux";
 
 interface ProfileTabProps {
   profile: User;
 }
 
 export const ProfileTab = ({ profile }: ProfileTabProps) => {
-  const [links, setLinks] = useState<{ url: string }[]>([]);
+  const [links, setLinks] = useState<string[]>(profile.links || []);
   const [selectedTopics, setSelectedTopics] = useState<string[]>(
     profile.techInterests?.slice(0, 10) || []
   );
@@ -24,6 +30,7 @@ export const ProfileTab = ({ profile }: ProfileTabProps) => {
   const [bio, setBio] = useState(profile.bio);
   const [image, setImage] = useState(profile.avatar);
   const [showUpdateButton, setShowUpdateButton] = useState(false);
+  const dispatch = useDispatch();
 
   const predefinedTopics = [
     "React",
@@ -40,14 +47,14 @@ export const ProfileTab = ({ profile }: ProfileTabProps) => {
 
   const addLink = () => {
     if (links.length < 3) {
-      setLinks([...links, { url: "" }]);
+      setLinks([...links, ""]);
       setShowUpdateButton(true);
     }
   };
 
   const updateLink = (index: number, value: string) => {
     const newLinks = [...links];
-    newLinks[index].url = value;
+    newLinks[index] = value;
     setLinks(newLinks);
     setShowUpdateButton(true);
   };
@@ -80,7 +87,7 @@ export const ProfileTab = ({ profile }: ProfileTabProps) => {
   };
 
   const handleUpdateProfile = () => {
-    const updatedProfile = {
+    const updatedProfile: Partial<User> = {
       name: displayName,
       headline,
       bio,
@@ -88,9 +95,22 @@ export const ProfileTab = ({ profile }: ProfileTabProps) => {
       techInterests: selectedTopics,
       avatar: image,
     };
-    console.log("Updated Profile:", updatedProfile);
+    updateMutation.mutate(updatedProfile);
     setShowUpdateButton(false);
   };
+
+  const updateMutation = useMutation({
+    mutationFn: updateProfile,
+    onSuccess: (response) => {
+      if (response.success) {
+        dispatch(setUser(response.data));
+        toast.success(response.message);
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      toast.error(error.response?.data?.message);
+    },
+  });
 
   return (
     <div className="space-y-6">
@@ -152,7 +172,7 @@ export const ProfileTab = ({ profile }: ProfileTabProps) => {
               <div key={index} className="flex gap-2 items-center">
                 <Input
                   placeholder="URL"
-                  value={link.url}
+                  value={link}
                   onChange={(e) => updateLink(index, e.target.value)}
                   className="flex-1"
                 />

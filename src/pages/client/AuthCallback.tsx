@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { gitHubOAuthLogin } from "@/service/client/api/authApi";
-import { googleOAuthLogin } from "@/service/client/api/authApi";
+import { gitHubOAuthLogin } from "@/service/client/api/clientApi";
+import { googleOAuthLogin } from "@/service/client/api/clientApi";
 import { setUser } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import { Loader } from "@/components/shared/Loader";

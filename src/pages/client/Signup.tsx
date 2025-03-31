@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Github } from "lucide-react";
 import { signupSchema } from "@/utils/validation/schemas";
 import { Input } from "@/components/ui/input";
-import { sendOtp } from "@/service/client/api/authApi";
+import { sendOtp } from "@/service/client/api/clientApi";
 import { LoadingButton } from "@/components/shared/LoadingButton";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { SocialButton } from "@/components/shared/SocialButton";

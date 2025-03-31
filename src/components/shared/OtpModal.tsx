@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { otpSchema } from "../../utils/validation/schemas";
-import { sendOtp, signup } from "../../service/client/api/authApi";
+import { sendOtp, signup } from "../../service/client/api/clientApi";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { clearSignupData } from "../../redux/slices/authSlice";
