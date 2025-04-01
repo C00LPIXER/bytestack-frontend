@@ -119,7 +119,7 @@ const userReports = [
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { admin, isAuthenticated } = useSelector(
-    (state: RootState) => state.adminAuth
+    (state: RootState) => state._auth
   );
 
   useEffect(() => {

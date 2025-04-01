@@ -35,20 +35,13 @@ export const Sidebar = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      await adminLogout();
-      dispatch(clearAdmin());
-      await persistor.flush();
-      localStorage.removeItem("persist:adminAuth");
-      persistor.persist();
-      toast.success("Logged out successfully");
-      navigate("/admin/login");
-    } catch (err) {
-      const errorMessage =
-        (err as unknown as { response?: { data?: { message?: string } } })
-          ?.response?.data?.message || "Logout failed";
-      toast.error(errorMessage);
-    }
+    await adminLogout();
+    dispatch(clearAdmin());
+    await persistor.flush();
+    localStorage.removeItem("persist:_auth");
+    persistor.persist();
+    toast.success("Logged out successfully");
+    navigate("/admin/login");
   };
 
   return (

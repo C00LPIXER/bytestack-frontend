@@ -16,7 +16,7 @@ const initialState: AdminAuthState = {
 };
 
 const adminAuthSlice = createSlice({
-  name: "adminAuth",
+  name: "_auth",
   initialState,
   reducers: {
     setAdmin: (state, action: PayloadAction<Admin>) => {

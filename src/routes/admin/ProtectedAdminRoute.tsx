@@ -7,7 +7,7 @@ const ProtectedAdminRoute: React.FC<{ children: JSX.Element }> = ({
   children,
 }) => {
   const { isAuthenticated } = useSelector(
-    (state: RootState) => state.adminAuth
+    (state: RootState) => state._auth
   );
   return isAuthenticated ? children : <Navigate to="/notfound" />;
 };

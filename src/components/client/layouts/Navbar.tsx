@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { ConfirmationDialog } from "@/components/shared/ConfirmationDialog";
 import { useDispatch } from "react-redux";
-import { clearAdmin } from "@/redux/slices/adminAuthSlice";
+import { clearUser } from "@/redux/slices/authSlice";
 
 export const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -67,7 +67,7 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    dispatch(clearAdmin());
+    dispatch(clearUser());
     setMobileMenuOpen(false);
   };
 
