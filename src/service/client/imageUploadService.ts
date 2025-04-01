@@ -39,7 +39,6 @@ export const uploadImage = async (
     await axios.put(uploadURL, file, {
       headers: {
         "Content-Type": file.type,
-        // "x-amz-acl": "public-read",
       },
     });
   } catch (error) {

@@ -99,5 +99,5 @@ export const profileSchema = Yup.object({
     )
     .max(3, "You can add up to 3 links"),
   techInterests: Yup.array().max(20, "You can add up to 20 tech interests"),
-  avatar: Yup.mixed().nullable(),
+  avatar: Yup.string()
 });
