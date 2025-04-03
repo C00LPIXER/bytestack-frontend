@@ -8,7 +8,6 @@ interface AuthState {
     name: string;
     email: string;
     password: string;
-    otpShared: boolean;
   } | null;
 }
 
@@ -33,7 +32,6 @@ const authSlice = createSlice({
         name: string;
         email: string;
         password: string;
-        otpShared: boolean;
       }>
     ) {
       state.signupData = action.payload;

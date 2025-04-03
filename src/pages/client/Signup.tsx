@@ -40,7 +40,6 @@ export default function Signup() {
               name: values.name,
               email: values.email,
               password: values.password,
-              otpShared: true,
             })
           );
           setIsOtpModalOpen(true);
