@@ -4,6 +4,7 @@ export interface User {
   email: string;
   avatar: string;
   headline?: string;
+  slug: string;
   bio?: string;
   links: string[];
   isBlogger: boolean;

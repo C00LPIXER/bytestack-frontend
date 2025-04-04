@@ -1,5 +1,5 @@
 import { clientAxiosInstance } from "@/api/clientAxios";
-import { clearAdmin } from "@/redux/slices/adminAuthSlice";
+import { clearUser } from "@/redux/slices/authSlice";
 import { store } from "@/redux/store";
 import { ErrorResponse } from "@/types/error";
 import { User } from "@/types/user";
@@ -13,7 +13,7 @@ interface SigninResponse extends ApiResponse {
 }
 
 interface ProfileResponse extends ApiResponse {
-  data: User;
+  user: User;
 }
 
 export const sendOtp = async (
@@ -90,7 +90,7 @@ export const fetchUser = async (): Promise<User | null> => {
       (error as ErrorResponse).response?.status === 401 ||
       (error as ErrorResponse).response?.status === 403
     ) {
-      store.dispatch(clearAdmin());
+      store.dispatch(clearUser());
       window.location.href = "/login";
     }
   }
@@ -107,6 +107,13 @@ export const updateProfile = async (
   const response = await clientAxiosInstance.put<ProfileResponse>(
     "/profile",
     data
+  );
+  return response.data;
+};
+
+export const getProfile = async (slug: string): Promise<ProfileResponse> => {
+  const response = await clientAxiosInstance.get<ProfileResponse>(
+    `/profile/${slug}`
   );
   return response.data;
 };

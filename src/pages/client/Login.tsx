@@ -23,7 +23,6 @@ export default function Login() {
   const signinMutation = useMutation({
     mutationFn: signin,
     onSuccess: (response) => {
-      console.log(response);
       if (response.success) {
         dispatch(setUser(response.user));
         toast.success(response.message);

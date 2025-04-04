@@ -139,7 +139,10 @@ export const Navbar = () => {
                 asChild
                 className="hover:bg-gray-800 rounded-md"
               >
-                <Link to="/profile" className="w-full py-2 px-3">
+                <Link
+                  to={`/u/${user?.slug}`}
+                  className="w-full py-2 px-3"
+                >
                   Profile
                 </Link>
               </DropdownMenuItem>
@@ -218,7 +221,7 @@ export const Navbar = () => {
                   className="hover:bg-gray-800 rounded-md"
                 >
                   <Link
-                    to="/profile"
+                    to={`/u/${user?.slug}`}
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-full py-2 px-3"
                   >

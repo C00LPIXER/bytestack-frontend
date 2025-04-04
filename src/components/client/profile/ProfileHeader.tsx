@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface IProfileHeader {
-  profile: User;
+  profile: User | null;
   isCurrentUser: boolean;
 }
 
@@ -36,6 +36,10 @@ export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
       return <Globe className="h-4 w-4" />;
     }
   };
+
+  if (!profile) {
+    return <>user not found</>;
+  }
 
   return (
     <div className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">

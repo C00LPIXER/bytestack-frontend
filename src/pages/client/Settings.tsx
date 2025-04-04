@@ -25,7 +25,7 @@ const Settings = () => {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Account Settings
           </h1>
-          <Link to="/profile">
+          <Link to={`/u/${user?.slug}`}>
             <Button className="h-8">Back to Profile</Button>
           </Link>
         </div>

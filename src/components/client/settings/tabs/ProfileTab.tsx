@@ -46,7 +46,7 @@ export const ProfileTab = ({ profile }: ProfileTabProps) => {
     onSuccess: (response) => {
       setShowUpdateButton(false);
       if (response.success) {
-        dispatch(setUser(response.data));
+        dispatch(setUser(response.user));
         toast.success(response.message);
       }
     },
