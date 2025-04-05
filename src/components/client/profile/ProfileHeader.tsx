@@ -20,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ProfileHeaderSkeleton } from "../skeletons/ProfileHeaderSkeleton";
 
 interface IProfileHeader {
   profile: User | null;
@@ -38,7 +39,7 @@ export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
   };
 
   if (!profile) {
-    return <>user not found</>;
+    return <ProfileHeaderSkeleton />;
   }
 
   return (

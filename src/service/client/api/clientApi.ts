@@ -113,7 +113,7 @@ export const updateProfile = async (
 
 export const getProfile = async (slug: string): Promise<ProfileResponse> => {
   const response = await clientAxiosInstance.get<ProfileResponse>(
-    `/profile/${slug}`
+    `/profile/u/${slug}`
   );
   return response.data;
 };
