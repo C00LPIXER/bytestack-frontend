@@ -15,7 +15,7 @@ import { ErrorResponse } from "@/types/error";
 import { useDispatch } from "react-redux";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { profileSchema } from "@/utils/validation/schemas";
-import { uploadImage } from "@/service/client/imageUploadService";
+import { uploadImage } from "@/service/client/service/imageUploadService";
 
 interface ProfileTabProps {
   profile: User;

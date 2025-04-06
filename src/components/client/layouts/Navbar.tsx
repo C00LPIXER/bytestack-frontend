@@ -93,10 +93,10 @@ export const Navbar = () => {
 
       {/* Desktop Navigation */}
       <div className="hidden md:flex items-center gap-6">
-        <Link to="/blogs" className="text-white hover:text-gray-300">
+        <Link to="/feeds" className="text-white hover:text-gray-300">
           Blogs
         </Link>
-        <Link to="/topics" className="text-white hover:text-gray-300">
+        <Link to="/feeds" className="text-white hover:text-gray-300">
           Topics
         </Link>
 
@@ -139,10 +139,7 @@ export const Navbar = () => {
                 asChild
                 className="hover:bg-gray-800 rounded-md"
               >
-                <Link
-                  to={`/u/${user?.slug}`}
-                  className="w-full py-2 px-3"
-                >
+                <Link to={`/u/${user?.slug}`} className="w-full py-2 px-3">
                   Profile
                 </Link>
               </DropdownMenuItem>
@@ -233,7 +230,7 @@ export const Navbar = () => {
                   className="hover:bg-gray-800 rounded-md"
                 >
                   <Link
-                    to="/blogs"
+                    to="/feeds"
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-full py-2 px-3"
                   >
@@ -245,7 +242,7 @@ export const Navbar = () => {
                   className="hover:bg-gray-800 rounded-md"
                 >
                   <Link
-                    to="/topics"
+                    to="/feeds"
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-full py-2 px-3"
                   >

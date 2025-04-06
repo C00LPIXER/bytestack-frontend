@@ -77,17 +77,17 @@ export const profileSchema = Yup.object({
   headline: Yup.string()
     .trim()
     .min(5, "Headline must be at least 5 characters")
-    .max(50, "Headline must be at most 50 characters")
+    .max(60, "Headline must be at most 60 characters")
     .matches(
-      /^(?!\s*$)(?=.*[a-zA-Z])[\w\s.,'@*(){}[\]\\/|-]+$/,
-      "Headline must contain at least one letter and can include spaces, commas, dots, hyphens, apostrophes, @, *, (), {}, [], \\ or /"
+      /^(?!\s*$)(?=.*[a-zA-Z])[\w\s.,'@*(){}[\]\\/|&-]+$/,
+      "Headline must contain at least one letter and can include spaces, commas, dots, hyphens, apostrophes, @, *, (), {}, [], &, \\ or /"
     ),
   bio: Yup.string()
     .trim()
     .min(5, "Bio must be at least 5 characters")
     .max(200, "Bio must be at most 200 characters")
     .matches(
-      /^(?!\s*$)(?=.*[a-zA-Z])[\w\s.,'@*(){}[\]\\/|-]+$/,
+      /^(?!\s*$)(?=.*[a-zA-Z])[\w\s.,'@*(){}[\]\\/|&#-]+$/,
       "Bio must contain at least one letter and can include spaces, commas, dots, hyphens, apostrophes, @, *, (), {}, [], \\ or /"
     ),
   links: Yup.array()

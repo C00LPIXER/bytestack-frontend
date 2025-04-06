@@ -2,6 +2,7 @@ import { clientAxiosInstance } from "@/api/clientAxios";
 import { clearUser } from "@/redux/slices/authSlice";
 import { store } from "@/redux/store";
 import { ErrorResponse } from "@/types/error";
+import { BloggerData } from "@/types/feed";
 import { User } from "@/types/user";
 interface ApiResponse {
   message: string;
@@ -14,6 +15,16 @@ interface SigninResponse extends ApiResponse {
 
 interface ProfileResponse extends ApiResponse {
   user: User;
+}
+export interface BloggersResponse extends ApiResponse {
+  success: boolean;
+  data: BloggerData[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+  message: string;
 }
 
 export const sendOtp = async (
@@ -114,6 +125,17 @@ export const updateProfile = async (
 export const getProfile = async (slug: string): Promise<ProfileResponse> => {
   const response = await clientAxiosInstance.get<ProfileResponse>(
     `/profile/u/${slug}`
+  );
+  return response.data;
+};
+
+export const getBloggers = async (
+  query: string,
+  page: number,
+  pageSize: number
+): Promise<BloggersResponse> => {
+  const response = await clientAxiosInstance.get<BloggersResponse>(
+    `/profile/bloggers?page=${page}&search=${query}&limit=${pageSize}`
   );
   return response.data;
 };

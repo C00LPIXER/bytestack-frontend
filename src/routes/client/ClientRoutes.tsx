@@ -12,7 +12,7 @@ import ResetPassword from "@/pages/client/ResetPassword";
 import AuthCallback from "@/pages/client/AuthCallback";
 import { Profile } from "@/pages/client/Profile";
 import Settings from "@/pages/client/Settings";
-
+import { FeedsPage } from "@/pages/client/Feeds";
 function ClientRoutes() {
   return (
     <AuthProvider>
@@ -27,11 +27,12 @@ function ClientRoutes() {
         </Route>
 
         <Route element={<PrivateRoute />}>
-          <Route path="/u/:slug" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/" element={<Dashboard />} />
         </Route>
 
+        <Route path="/u/:slug" element={<Profile />} />
+        <Route path="/feeds" element={<FeedsPage />} />
         <Route path="*" element={<NotFount />} />
       </Routes>
     </AuthProvider>
