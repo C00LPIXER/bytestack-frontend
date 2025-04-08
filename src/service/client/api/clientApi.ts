@@ -13,8 +13,12 @@ interface SigninResponse extends ApiResponse {
   user: User;
 }
 
-interface ProfileResponse extends ApiResponse {
+export interface ProfileResponse extends ApiResponse {
   user: User;
+  followers: number;
+  following: number;
+  isFollowing: boolean;
+  isFollower: boolean;
 }
 export interface BloggersResponse extends ApiResponse {
   success: boolean;
@@ -136,6 +140,20 @@ export const getBloggers = async (
 ): Promise<BloggersResponse> => {
   const response = await clientAxiosInstance.get<BloggersResponse>(
     `/profile/bloggers?page=${page}&search=${query}&limit=${pageSize}`
+  );
+  return response.data;
+};
+
+export const follow = async (id: string): Promise<ApiResponse> => {
+  const response = await clientAxiosInstance.post<ApiResponse>(
+    `/profile/${id}/follow`
+  );
+  return response.data;
+};
+
+export const unfollow = async (id: string): Promise<ApiResponse> => {
+  const response = await clientAxiosInstance.post<ApiResponse>(
+    `/profile/${id}/unfollow`
   );
   return response.data;
 };

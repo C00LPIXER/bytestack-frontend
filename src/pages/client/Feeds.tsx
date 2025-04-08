@@ -121,6 +121,8 @@ export const FeedsPage = () => {
   const totalItems = bloggersMutation.data?.meta?.total || 0;
   const displayedItems = getDisplayedItems();
 
+  console.log(displayedItems);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -152,7 +154,24 @@ export const FeedsPage = () => {
                       <BloggerCard
                         key={item._id}
                         {...(item as BloggerData)}
-                        // onFollow={() => console.log("object")}
+                        isFollowed={item.isFollowed ? item.isFollowed : false}
+                        isFollower={item.isFollower ? item.isFollowed : false}
+                        onFollow={() => {}}
+                        onFollowChange={(isNowFollowed: boolean) => {
+                          setBloggers((prev) =>
+                            prev.map((blogger) =>
+                              blogger._id === item._id
+                                ? {
+                                    ...blogger,
+                                    isFollowed: isNowFollowed,
+                                    followers: isNowFollowed
+                                      ? blogger.followers + 1
+                                      : blogger.followers - 1,
+                                  }
+                                : blogger
+                            )
+                          );
+                        }}
                       />
                     );
                   } else if ("articles" in item) {

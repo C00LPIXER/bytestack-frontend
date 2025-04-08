@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users } from "lucide-react"; // Added icons for stats
 import { Link } from "react-router-dom";
+import Follows from "../profile/Follows";
 
 interface BloggerCardProps {
   _id: string;
@@ -14,10 +15,13 @@ interface BloggerCardProps {
   followers?: number;
   onFollow?: () => void;
   className?: string;
+  isFollower: boolean;
+  isFollowed: boolean;
+  onFollowChange?: (isNowFollowed: boolean) => void;
 }
 
 export const BloggerCard = ({
-  // _id,
+  _id,
   name,
   headline,
   avatar,
@@ -27,6 +31,9 @@ export const BloggerCard = ({
   followers = 0,
   onFollow,
   className,
+  isFollowed,
+  isFollower,
+  onFollowChange,
 }: BloggerCardProps) => {
   return (
     <div
@@ -48,14 +55,14 @@ export const BloggerCard = ({
           )}
         </div>
         {onFollow && (
-          <Button
-            variant="outline"
+          <Follows
+            isFollower={isFollower}
+            isFollowing={isFollowed}
+            id={_id}
             size="sm"
-            onClick={onFollow}
             className="ml-2 text-xs whitespace-nowrap"
-          >
-            Follow
-          </Button>
+            onFollowChange={onFollowChange}
+          />
         )}
       </div>
       {bio && (

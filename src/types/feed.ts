@@ -1,7 +1,11 @@
 import { BlogPostData } from "./blog";
 import { User } from "./user";
 
-export type BloggerData = User;
+export type BloggerData = User & {
+  isFollowed: boolean;
+  followers: number;
+  isFollower: boolean
+};
 
 export interface TopicData {
   name: string;

@@ -11,6 +11,7 @@ import {
   Bell,
   BellOff,
   MoreVerticalIcon,
+  Linkedin,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
@@ -21,18 +22,35 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ProfileHeaderSkeleton } from "../skeletons/ProfileHeaderSkeleton";
+import { formatNumber } from "@/utils/FormatNumbe";
+import Follows from "./Follows";
 
 interface IProfileHeader {
   profile: User | null;
+  followers: number;
+  followings: number;
   isCurrentUser: boolean;
+  isFollowing: boolean;
+  isFollower: boolean;
+  onFollowChange?: (isFollowing: boolean) => void;
 }
 
-export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
+export const ProfileHeader = ({
+  profile,
+  isCurrentUser,
+  followers,
+  followings,
+  onFollowChange,
+  isFollowing,
+  isFollower,
+}: IProfileHeader) => {
   const getLinkIcon = (url: string) => {
     if (url.includes("github.com")) {
       return <Github className="h-4 w-4" />;
     } else if (url.includes("twitter.com")) {
       return <Twitter className="h-4 w-4" />;
+    } else if (url.includes("linkedin.com")) {
+      return <Linkedin className="h-4 w-4" />;
     } else {
       return <Globe className="h-4 w-4" />;
     }
@@ -45,7 +63,7 @@ export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
   return (
     <div className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
       {/* Instagram-style header with consistent layout across devices */}
-      <div className="flex flex-row items-start gap-8 mb-1">
+      <div className="flex flex-row items-start gap-8 mb-3">
         {/* Avatar - left-aligned on all devices */}
         <div className="flex justify-start">
           <Avatar className="w-20 h-20 md:w-24 md:h-24 border-4 border-white dark:border-gray-800 shadow-md">
@@ -94,9 +112,14 @@ export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
               ) : (
                 <>
                   <div className="hidden md:flex">
-                    <Button className="w-24" size="sm">
-                      <span>Follow</span>
-                    </Button>
+                    <Follows
+                      isFollowing={isFollowing}
+                      id={profile._id}
+                      className="w-24"
+                      size="sm"
+                      isFollower={isFollower}
+                      onFollowChange={onFollowChange}
+                    />
                   </div>
 
                   <DropdownMenu>
@@ -109,13 +132,15 @@ export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
                     <DropdownMenuContent align="end">
                       <div className="md:hidden">
                         <DropdownMenuItem>
-                          <Button
+                          <Follows
+                            isFollowing={isFollowing}
+                            id={profile._id}
+                            className="w-full"
                             size="sm"
                             variant="outline"
-                            className="w-full"
-                          >
-                            Follow
-                          </Button>
+                            isFollower={isFollower}
+                            onFollowChange={onFollowChange}
+                          />
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                       </div>
@@ -138,27 +163,27 @@ export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
 
           {/* Stats - followers, following, posts in a row */}
           <div className="flex justify-start gap-6 mb-4">
-            <div className="text-left">
-              <span className="block font-bold text-gray-900 dark:text-white text-sm">
-                180
+            <div className="flex items-center gap-2 text-left">
+              <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
+                {formatNumber(followings)}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="md:text-sm text-xs text-gray-500 dark:text-gray-400">
                 Following
               </span>
             </div>
-            <div className="text-left">
-              <span className="block font-bold text-gray-900 dark:text-white text-sm">
-                400
+            <div className="flex items-center gap-2 text-left">
+              <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
+                {formatNumber(followers)}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="md:text-sm text-xs text-gray-500 dark:text-gray-400">
                 Followers
               </span>
             </div>
-            <div className="text-left">
-              <span className="block font-bold text-gray-900 dark:text-white text-sm">
-                200
+            <div className="flex items-center gap-2 text-left">
+              <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
+                {formatNumber(200000)}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="md:text-sm text-xs text-gray-500 dark:text-gray-400">
                 Posts
               </span>
             </div>
@@ -191,7 +216,7 @@ export const ProfileHeader = ({ profile, isCurrentUser }: IProfileHeader) => {
                   rel="noopener noreferrer"
                   className="hover:underline"
                 >
-                  {link.replace(/https?:\/\//, "").split("/")[0]}
+                  {link.replace(/https?:\/\/(www\.)?/, "").split("/")[0]}
                 </a>
               </div>
             ))}

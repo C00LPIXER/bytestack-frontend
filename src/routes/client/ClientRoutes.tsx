@@ -29,10 +29,10 @@ function ClientRoutes() {
         <Route element={<PrivateRoute />}>
           <Route path="/settings" element={<Settings />} />
           <Route path="/" element={<Dashboard />} />
+          <Route path="/u/:slug" element={<Profile />} />
+          <Route path="/feeds" element={<FeedsPage />} />
         </Route>
 
-        <Route path="/u/:slug" element={<Profile />} />
-        <Route path="/feeds" element={<FeedsPage />} />
         <Route path="*" element={<NotFount />} />
       </Routes>
     </AuthProvider>

@@ -93,72 +93,73 @@ export const Navbar = () => {
 
       {/* Desktop Navigation */}
       <div className="hidden md:flex items-center gap-6">
-        <Link to="/feeds" className="text-white hover:text-gray-300">
-          Blogs
-        </Link>
-        <Link to="/feeds" className="text-white hover:text-gray-300">
-          Topics
-        </Link>
-
         {isAuthenticated ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="p-0 hover:bg-transparent focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+          <>
+            <Link to="/feeds" className="text-white hover:text-gray-300">
+              Blogs
+            </Link>
+            <Link to="/feeds" className="text-white hover:text-gray-300">
+              Topics
+            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="p-0 hover:bg-transparent focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                >
+                  <Avatar className="h-8 w-8 dark:bg-gray-800 bg-gray-200">
+                    <AvatarImage src={user?.avatar} alt={user?.name} />
+                    <AvatarFallback className="dark:bg-gray-800 bg-gray-200 dark:text-white text-gray-900">
+                      {user?.name?.charAt(0).toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-64 bg-black text-white border-gray-900 rounded-lg shadow-lg p-4"
+                align="end"
+                sideOffset={5}
               >
-                <Avatar className="h-8 w-8 dark:bg-gray-800 bg-gray-200">
-                  <AvatarImage src={user?.avatar} alt={user?.name} />
-                  <AvatarFallback className="dark:bg-gray-800 bg-gray-200 dark:text-white text-gray-900">
-                    {user?.name?.charAt(0).toUpperCase() || "U"}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="w-64 bg-black text-white border-gray-900 rounded-lg shadow-lg p-4"
-              align="end"
-              sideOffset={5}
-            >
-              {/* User Info Section */}
-              <div className="flex items-center gap-3 mb-4 border-b border-gray-700 pb-3">
-                <Avatar className="h-10 w-10 dark:bg-gray-800 bg-gray-200">
-                  <AvatarImage src={user?.avatar} alt={user?.name} />
-                  <AvatarFallback className="dark:bg-gray-800 bg-gray-200 dark:text-white text-gray-900">
-                    {user?.name?.charAt(0).toUpperCase() || "U"}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm font-semibold">{user?.name}</p>
-                  <p className="text-xs text-gray-400">{user?.email}</p>
+                {/* User Info Section */}
+                <div className="flex items-center gap-3 mb-4 border-b border-gray-700 pb-3">
+                  <Avatar className="h-10 w-10 dark:bg-gray-800 bg-gray-200">
+                    <AvatarImage src={user?.avatar} alt={user?.name} />
+                    <AvatarFallback className="dark:bg-gray-800 bg-gray-200 dark:text-white text-gray-900">
+                      {user?.name?.charAt(0).toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-sm font-semibold">{user?.name}</p>
+                    <p className="text-xs text-gray-400">{user?.email}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Menu Items */}
-              <DropdownMenuItem
-                asChild
-                className="hover:bg-gray-800 rounded-md"
-              >
-                <Link to={`/u/${user?.slug}`} className="w-full py-2 px-3">
-                  Profile
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                asChild
-                className="hover:bg-gray-800 rounded-md"
-              >
-                <Link to="/settings" className="w-full py-2 px-3">
-                  Settings
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={openLogoutDialog}
-                className="hover:bg-gray-800 rounded-md py-2 px-3 cursor-pointer"
-              >
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                {/* Menu Items */}
+                <DropdownMenuItem
+                  asChild
+                  className="hover:bg-gray-800 rounded-md"
+                >
+                  <Link to={`/u/${user?.slug}`} className="w-full py-2 px-3">
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  asChild
+                  className="hover:bg-gray-800 rounded-md"
+                >
+                  <Link to="/settings" className="w-full py-2 px-3">
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={openLogoutDialog}
+                  className="hover:bg-gray-800 rounded-md py-2 px-3 cursor-pointer"
+                >
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
         ) : (
           <>
             <Link to="/login" className="text-white hover:text-gray-300">
@@ -270,30 +271,6 @@ export const Navbar = () => {
               </>
             ) : (
               <>
-                <DropdownMenuItem
-                  asChild
-                  className="hover:bg-gray-800 rounded-md"
-                >
-                  <Link
-                    to="/blogs"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2 px-3"
-                  >
-                    Blogs
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  asChild
-                  className="hover:bg-gray-800 rounded-md"
-                >
-                  <Link
-                    to="/topics"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2 px-3"
-                  >
-                    Topics
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem
                   asChild
                   className="hover:bg-gray-800 rounded-md"
