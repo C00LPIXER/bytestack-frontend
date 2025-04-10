@@ -22,8 +22,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ProfileHeaderSkeleton } from "../skeletons/ProfileHeaderSkeleton";
-import { formatNumber } from "@/utils/FormatNumbe";
 import Follows from "./Follows";
+import { formatNumber } from "@/utils/FormatNumber";
+import { FollowsModal } from "./FollowsModal";
+import { useState } from "react";
 
 interface IProfileHeader {
   profile: User | null;
@@ -44,6 +46,8 @@ export const ProfileHeader = ({
   isFollowing,
   isFollower,
 }: IProfileHeader) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const getLinkIcon = (url: string) => {
     if (url.includes("github.com")) {
       return <Github className="h-4 w-4" />;
@@ -63,6 +67,11 @@ export const ProfileHeader = ({
   return (
     <div className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
       {/* Instagram-style header with consistent layout across devices */}
+      <FollowsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        userId={profile._id}
+      />
       <div className="flex flex-row items-start gap-8 mb-3">
         {/* Avatar - left-aligned on all devices */}
         <div className="flex justify-start">
@@ -163,7 +172,10 @@ export const ProfileHeader = ({
 
           {/* Stats - followers, following, posts in a row */}
           <div className="flex justify-start gap-6 mb-4">
-            <div className="flex items-center gap-2 text-left">
+            <div
+              className="flex items-center gap-2 text-left"
+              onClick={() => setIsModalOpen(true)}
+            >
               <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
                 {formatNumber(followings)}
               </span>
@@ -171,7 +183,10 @@ export const ProfileHeader = ({
                 Following
               </span>
             </div>
-            <div className="flex items-center gap-2 text-left">
+            <div
+              className="flex items-center gap-2 text-left"
+              onClick={() => setIsModalOpen(true)}
+            >
               <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
                 {formatNumber(followers)}
               </span>
