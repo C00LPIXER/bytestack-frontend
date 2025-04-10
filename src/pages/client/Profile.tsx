@@ -17,7 +17,7 @@ export const Profile = () => {
     enabled: !!slug,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnReconnect: false,
   });
 

@@ -47,6 +47,7 @@ export const ProfileHeader = ({
   isFollower,
 }: IProfileHeader) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tab, setTab] = useState<"followings" | "followers">("followings");
 
   const getLinkIcon = (url: string) => {
     if (url.includes("github.com")) {
@@ -60,6 +61,11 @@ export const ProfileHeader = ({
     }
   };
 
+  const handleTabOpen = (tab: "followings" | "followers") => {
+    setTab(tab);
+    setIsModalOpen(true);
+  };
+
   if (!profile) {
     return <ProfileHeaderSkeleton />;
   }
@@ -71,6 +77,7 @@ export const ProfileHeader = ({
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         userId={profile._id}
+        initialTab={tab}
       />
       <div className="flex flex-row items-start gap-8 mb-3">
         {/* Avatar - left-aligned on all devices */}
@@ -174,7 +181,7 @@ export const ProfileHeader = ({
           <div className="flex justify-start gap-6 mb-4">
             <div
               className="flex items-center gap-2 text-left"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => handleTabOpen("followings")}
             >
               <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
                 {formatNumber(followings)}
@@ -185,7 +192,7 @@ export const ProfileHeader = ({
             </div>
             <div
               className="flex items-center gap-2 text-left"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => handleTabOpen("followers")}
             >
               <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
                 {formatNumber(followers)}

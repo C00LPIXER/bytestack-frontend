@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogDescription,
@@ -7,6 +7,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useQuery } from "@tanstack/react-query";
+import { getFollows } from "@/service/client/api/clientApi";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { useDebounce } from "@/hooks/useDebounce";
+import Follows from "./Follows";
 
 // Type definitions
 interface User {
@@ -14,163 +20,18 @@ interface User {
   name: string;
   avatar: string;
   slug: string;
-}
-
-interface ApiResponse {
-  data: User[];
-  hasMore: boolean;
-  total: number;
+  isFollower: boolean;
+  isFollowing: boolean;
 }
 
 interface FollowsModalProps {
   isOpen: boolean;
   onClose: () => void;
   userId: string;
+  initialTab?: "followers" | "followings";
 }
 
-// Static data with 20 example users
-const mockUsers: User[] = [
-  {
-    _id: "1",
-    name: "John Doe",
-    avatar: "https://example.com/john.png",
-    slug: "johndoe",
-  },
-  {
-    _id: "2",
-    name: "Jane Smith",
-    avatar: "https://example.com/jane.png",
-    slug: "janesmith",
-  },
-  {
-    _id: "3",
-    name: "Mike Johnson",
-    avatar: "https://example.com/mike.png",
-    slug: "mikej",
-  },
-  {
-    _id: "4",
-    name: "Sarah Williams",
-    avatar: "https://example.com/sarah.png",
-    slug: "sarahw",
-  },
-  {
-    _id: "5",
-    name: "Tom Brown",
-    avatar: "https://example.com/tom.png",
-    slug: "tombrown",
-  },
-  {
-    _id: "6",
-    name: "Emily Davis",
-    avatar: "https://example.com/emily.png",
-    slug: "emilyd",
-  },
-  {
-    _id: "7",
-    name: "Alex Wilson",
-    avatar: "https://example.com/alex.png",
-    slug: "alexw",
-  },
-  {
-    _id: "8",
-    name: "Lisa Anderson",
-    avatar: "https://example.com/lisa.png",
-    slug: "lisaa",
-  },
-  {
-    _id: "9",
-    name: "David Lee",
-    avatar: "https://example.com/david.png",
-    slug: "davidlee",
-  },
-  {
-    _id: "10",
-    name: "Kelly White",
-    avatar: "https://example.com/kelly.png",
-    slug: "kellyw",
-  },
-  {
-    _id: "11",
-    name: "Chris Taylor",
-    avatar: "https://example.com/chris.png",
-    slug: "christ",
-  },
-  {
-    _id: "12",
-    name: "Rachel Moore",
-    avatar: "https://example.com/rachel.png",
-    slug: "rachelm",
-  },
-  {
-    _id: "13",
-    name: "Peter Clark",
-    avatar: "https://example.com/peter.png",
-    slug: "peterc",
-  },
-  {
-    _id: "14",
-    name: "Anna Martinez",
-    avatar: "https://example.com/anna.png",
-    slug: "annam",
-  },
-  {
-    _id: "15",
-    name: "James Thompson",
-    avatar: "https://example.com/james.png",
-    slug: "jamest",
-  },
-  {
-    _id: "16",
-    name: "Michelle Garcia",
-    avatar: "https://example.com/michelle.png",
-    slug: "michelleg",
-  },
-  {
-    _id: "17",
-    name: "Robert Jackson",
-    avatar: "https://example.com/robert.png",
-    slug: "robertj",
-  },
-  {
-    _id: "18",
-    name: "Sophie Turner",
-    avatar: "https://example.com/sophie.png",
-    slug: "sophiet",
-  },
-  {
-    _id: "19",
-    name: "William Parker",
-    avatar: "https://example.com/william.png",
-    slug: "willp",
-  },
-  {
-    _id: "20",
-    name: "Emma Roberts",
-    avatar: "https://example.com/emma.png",
-    slug: "emmar",
-  },
-];
-
-// Simplified data fetch function
-const fetchFollowData = (
-  userId: string,
-  type: "followers" | "following",
-  page: number,
-  limit: number = 10
-): ApiResponse => {
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-
-  const paginatedData = mockUsers.slice(startIndex, endIndex);
-  const hasMore = endIndex < mockUsers.length;
-
-  return {
-    data: paginatedData,
-    hasMore: hasMore,
-    total: mockUsers.length,
-  };
-};
+const PAGE_SIZE = 10;
 
 // User Item Component
 const UserItem = ({ user }: { user: User }) => (
@@ -179,10 +40,17 @@ const UserItem = ({ user }: { user: User }) => (
       <AvatarImage src={user.avatar} alt={user.name} />
       <AvatarFallback>{user.name[0]}</AvatarFallback>
     </Avatar>
-    <div>
+    <div className="flex-1">
       <p className="font-medium">{user.name}</p>
       <p className="text-sm text-gray-500">@{user.slug}</p>
     </div>
+    <Follows
+      id={user._id}
+      size="sm"
+      isFollowing={user.isFollowing}
+      isFollower={user.isFollower}
+      className="ml-2 text-xs whitespace-nowrap"
+    />
   </div>
 );
 
@@ -190,72 +58,126 @@ export const FollowsModal = ({
   isOpen,
   onClose,
   userId,
+  initialTab = "followers",
 }: FollowsModalProps) => {
-  const [followers, setFollowers] = useState<User[]>([]);
-  const [following, setFollowing] = useState<User[]>([]);
-  const [followersPage, setFollowersPage] = useState(1);
-  const [followingPage, setFollowingPage] = useState(1);
-  const [hasMoreFollowers, setHasMoreFollowers] = useState(true);
-  const [hasMoreFollowing, setHasMoreFollowing] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Load data
-  const loadMoreData = useCallback(
-    (type: "followers" | "following", page: number) => {
-      if (
-        isLoading ||
-        (!hasMoreFollowers && type === "followers") ||
-        (!hasMoreFollowing && type === "following")
-      ) {
-        return;
-      }
-
-      setIsLoading(true);
-      const data = fetchFollowData(userId, type, page);
-
-      if (type === "followers") {
-        setFollowers((prev) => [...prev, ...data.data]);
-        setHasMoreFollowers(data.hasMore);
-        setFollowersPage(page);
-      } else {
-        setFollowing((prev) => [...prev, ...data.data]);
-        setHasMoreFollowing(data.hasMore);
-        setFollowingPage(page);
-      }
-      setIsLoading(false);
-    },
-    [userId, isLoading, hasMoreFollowers, hasMoreFollowing]
+  const [activeTab, setActiveTab] = useState<"followers" | "followings">(
+    initialTab
   );
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 500); // 500ms debounce
+  const [page, setPage] = useState(1);
+  const [allFollowers, setAllFollowers] = useState<User[]>([]);
+  const [allFollowings, setAllFollowings] = useState<User[]>([]);
 
-  // Initial load
+  // Query for followers
+  const {
+    data: followersData,
+    isFetching: isLoadingFollowers,
+    isError: isErrorFollowers,
+    error: followersError,
+    refetch: refetchFollowers,
+  } = useQuery<User[]>({
+    queryKey: ["followers", userId, debouncedSearchQuery, page],
+    queryFn: () =>
+      getFollows("followers", debouncedSearchQuery, page, PAGE_SIZE).then(
+        (res) => res as User[]
+      ),
+    enabled: isOpen && activeTab === "followers",
+  });
+
+  // Query for followings
+  const {
+    data: followingsData,
+    isFetching: isLoadingFollowings,
+    isError: isErrorFollowings,
+    error: followingsError,
+    refetch: refetchFollowings,
+  } = useQuery<User[]>({
+    queryKey: ["followings", userId, debouncedSearchQuery, page],
+    queryFn: () =>
+      getFollows("followings", debouncedSearchQuery, page, PAGE_SIZE).then(
+        (res) => res as User[]
+      ),
+    enabled: isOpen && activeTab === "followings",
+  });
+
+  // Update accumulated data when new data is fetched
   useEffect(() => {
-    if (isOpen) {
-      setFollowers([]);
-      setFollowing([]);
-      setFollowersPage(1);
-      setFollowingPage(1);
-      setHasMoreFollowers(true);
-      setHasMoreFollowing(true);
-      loadMoreData("followers", 1);
-      loadMoreData("following", 1);
+    if (followersData && activeTab === "followers") {
+      setAllFollowers((prev) => {
+        const newUsers = followersData.filter(
+          (newUser) => !prev.some((user) => user._id === newUser._id)
+        );
+        return [...prev, ...newUsers];
+      });
     }
-  }, [isOpen, loadMoreData]);
+  }, [followersData, activeTab]);
 
-  // Handle scroll
-  const handleScroll = useCallback(
-    (e: React.UIEvent<HTMLDivElement>, type: "followers" | "following") => {
-      const target = e.target as HTMLDivElement;
-      const bottom =
-        target.scrollHeight - target.scrollTop <= target.clientHeight + 100;
+  useEffect(() => {
+    if (followingsData && activeTab === "followings") {
+      setAllFollowings((prev) => {
+        const newUsers = followingsData.filter(
+          (newUser) => !prev.some((user) => user._id === newUser._id)
+        );
+        return [...prev, ...newUsers];
+      });
+    }
+  }, [followingsData, activeTab]);
 
-      if (bottom && !isLoading) {
-        const nextPage =
-          type === "followers" ? followersPage + 1 : followingPage + 1;
-        loadMoreData(type, nextPage);
+  // Refetch and reset on search or tab change
+  useEffect(() => {
+    if (activeTab === "followers") {
+      refetchFollowers();
+      if (debouncedSearchQuery || page > 1) {
+        setAllFollowers([]); // Reset only if searching or paginating
+        setPage(1);
       }
-    },
-    [followersPage, followingPage, isLoading, loadMoreData]
-  );
+    } else if (activeTab === "followings") {
+      refetchFollowings();
+      if (debouncedSearchQuery || page > 1) {
+        setAllFollowings([]); // Reset only if searching or paginating
+        setPage(1);
+      }
+    }
+  }, [
+    debouncedSearchQuery,
+    activeTab,
+    page,
+    refetchFollowers,
+    refetchFollowings,
+  ]);
+
+  // Handle page change (manual pagination)
+  const handleNextPage = () => {
+    if (
+      followersData?.length === PAGE_SIZE &&
+      activeTab === "followers" &&
+      !isLoadingFollowers
+    ) {
+      setPage((prev) => prev + 1);
+    } else if (
+      followingsData?.length === PAGE_SIZE &&
+      activeTab === "followings" &&
+      !isLoadingFollowings
+    ) {
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  // Handle tab change
+  const handleTabChange = (value: string) => {
+    const newTab = value as "followers" | "followings";
+    setActiveTab(newTab);
+    setSearchQuery(""); // Reset search when switching tabs
+    setPage(1); // Reset page when switching tabs
+    setAllFollowers(newTab === "followers" ? [] : allFollowers); // Preserve data if same tab
+    setAllFollowings(newTab === "followings" ? [] : allFollowings); // Preserve data if same tab
+    if (newTab === "followers") {
+      refetchFollowers();
+    } else {
+      refetchFollowings();
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -263,42 +185,82 @@ export const FollowsModal = ({
         <DialogDescription className="sr-only">
           Followers and Following list
         </DialogDescription>
-        <Tabs defaultValue="followers" className="w-full pt-6">
+        <Tabs
+          defaultValue={initialTab}
+          className="w-full pt-4"
+          onValueChange={handleTabChange}
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="followers">Followers</TabsTrigger>
-            <TabsTrigger value="following">Following</TabsTrigger>
+            <TabsTrigger value="followings">Followings</TabsTrigger>
           </TabsList>
+          <div className="pt-4">
+            <div className="relative">
+              <Input
+                type="text"
+                placeholder="Search users..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 text-sm"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            </div>
+          </div>
 
           <TabsContent value="followers">
-            <ScrollArea
-              className="h-[400px] w-ful"
-              onScroll={(e) => handleScroll(e, "followers")}
-            >
-              {followers.map((user) => (
+            <ScrollArea className="h-[400px] w-full">
+              {allFollowers.length === 0 && !isLoadingFollowers && (
+                <p className="p-3 text-center text-gray-500">
+                  No followers found
+                </p>
+              )}
+              {allFollowers.map((user) => (
                 <UserItem key={user._id} user={user} />
               ))}
-              {isLoading && <p className="p-3 text-center">Loading...</p>}
-              {!hasMoreFollowers && followers.length > 0 && (
-                <p className="p-3 text-center text-gray-500">
-                  No more followers to load
+              {isLoadingFollowers && (
+                <p className="p-3 text-center">Loading...</p>
+              )}
+              {isErrorFollowers && (
+                <p className="p-3 text-center text-red-500">
+                  Error: {(followersError as Error)?.message}
                 </p>
+              )}
+              {followersData?.length === PAGE_SIZE && (
+                <button
+                  onClick={handleNextPage}
+                  className="w-full py-2 text-center text-blue-500 hover:underline"
+                >
+                  Load More
+                </button>
               )}
             </ScrollArea>
           </TabsContent>
 
-          <TabsContent value="following">
-            <ScrollArea
-              className="h-[400px] w-full"
-              onScroll={(e) => handleScroll(e, "following")}
-            >
-              {following.map((user) => (
+          <TabsContent value="followings">
+            <ScrollArea className="h-[400px] w-full">
+              {allFollowings.length === 0 && !isLoadingFollowings && (
+                <p className="p-3 text-center text-gray-500">
+                  No followings found
+                </p>
+              )}
+              {allFollowings.map((user) => (
                 <UserItem key={user._id} user={user} />
               ))}
-              {isLoading && <p className="p-3 text-center">Loading...</p>}
-              {!hasMoreFollowing && following.length > 0 && (
-                <p className="p-3 text-center text-gray-500">
-                  No more following to load
+              {isLoadingFollowings && (
+                <p className="p-3 text-center">Loading...</p>
+              )}
+              {isErrorFollowings && (
+                <p className="p-3 text-center text-red-500">
+                  Error: {(followingsError as Error)?.message}
                 </p>
+              )}
+              {followingsData?.length === PAGE_SIZE && (
+                <button
+                  onClick={handleNextPage}
+                  className="w-full py-2 text-center text-blue-500 hover:underline"
+                >
+                  Load More
+                </button>
               )}
             </ScrollArea>
           </TabsContent>

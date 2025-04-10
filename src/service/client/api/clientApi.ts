@@ -31,6 +31,16 @@ export interface BloggersResponse extends ApiResponse {
   message: string;
 }
 
+export interface GetFollows extends ApiResponse {
+  followersCount: number;
+  isFollower: boolean;
+  isFollowing: true;
+  _id: string;
+  name: string;
+  avatar: string;
+  slug: string;
+}
+
 export const sendOtp = async (
   email: string,
   type: string
@@ -155,5 +165,18 @@ export const unfollow = async (id: string): Promise<ApiResponse> => {
   const response = await clientAxiosInstance.post<ApiResponse>(
     `/profile/${id}/unfollow`
   );
+  return response.data;
+};
+
+export const getFollows = async (
+  type: string,
+  query: string,
+  page: number,
+  pageSize: number
+): Promise<GetFollows[]> => {
+  const response = await clientAxiosInstance.get<GetFollows[]>(
+    `/profile/relation/${type}?page=${page}&search=${query}&limit=${pageSize}`
+  );
+
   return response.data;
 };
