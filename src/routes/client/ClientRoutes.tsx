@@ -7,11 +7,12 @@ import Signup from "@/pages/client/Signup";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import { NotFount } from "@/pages/client/NotFound";
-import { Loader } from "@/components/shared/Loader";
 import ForgotPassword from "@/pages/client/ForgotPassword";
 import ResetPassword from "@/pages/client/ResetPassword";
 import AuthCallback from "@/pages/client/AuthCallback";
-
+import { Profile } from "@/pages/client/Profile";
+import Settings from "@/pages/client/Settings";
+import { FeedsPage } from "@/pages/client/Feeds";
 function ClientRoutes() {
   return (
     <AuthProvider>
@@ -26,10 +27,12 @@ function ClientRoutes() {
         </Route>
 
         <Route element={<PrivateRoute />}>
+          <Route path="/settings" element={<Settings />} />
           <Route path="/" element={<Dashboard />} />
+          <Route path="/u/:slug" element={<Profile />} />
+          <Route path="/feeds" element={<FeedsPage />} />
         </Route>
 
-        <Route path="/lod" element={<Loader />} />
         <Route path="*" element={<NotFount />} />
       </Routes>
     </AuthProvider>

@@ -14,12 +14,12 @@ const persistConfig = {
   key: "root",
   storage,
   transforms: [encryptor],
-  whitelist: ["auth", "adminAuth"],
+  whitelist: ["auth", "_auth"],
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  adminAuth: adminAuthReducer,
+  _auth: adminAuthReducer,
 });
 
 const persistedReducer = persistReducer<ReturnType<typeof rootReducer>>(

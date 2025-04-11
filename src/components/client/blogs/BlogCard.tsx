@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
 interface BlogCardProps {
-  author: {
+  author?: {
     name: string;
     role: string;
     avatar: string;
@@ -37,20 +37,30 @@ export const BlogCard = ({
 }: BlogCardProps) => {
   return (
     <div
-      className={`border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow ${className}`}
+      className={`border-b border-gray-200 dark:border-gray-700 py-2 hover: ${className}`}
     >
-      <div className="flex items-center mb-4">
-        <Avatar className="w-10 h-10 mr-3">
-          <AvatarImage src={author.avatar} alt={author.name} />
-          <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="text-sm font-semibold text-gray-900 dark:text-white">{author.name}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">{author.role}</p>
+      {author && (
+        <div className="flex items-center mb-4">
+          <Avatar className="w-10 h-10 mr-3">
+            <AvatarImage src={author.avatar} alt={author.name} />
+            <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+              {author.name}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {author.role}
+            </p>
+          </div>
         </div>
-      </div>
-      <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">{title}</h3>
-      <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{description}</p>
+      )}
+      <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">
+        {title}
+      </h3>
+      <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+        {description}
+      </p>
       <div className="text-xs text-gray-500 dark:text-gray-400 mb-4">
         Published: {publishedDate} • {readTime}
       </div>

@@ -45,7 +45,6 @@ clientAxiosInstance.interceptors.response.use(
         }
       } catch (refreshError) {
         store.dispatch(clearUser());
-        localStorage.removeItem("persist:auth");
 
         await axios.post(
           `${import.meta.env.VITE_PRIVATE_API_URI}/admin/logout`,

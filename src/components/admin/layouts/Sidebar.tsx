@@ -35,26 +35,19 @@ export const Sidebar = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      await adminLogout();
-      dispatch(clearAdmin());
-      await persistor.flush();
-      localStorage.removeItem("persist:adminAuth");
-      persistor.persist();
-      toast.success("Logged out successfully");
-      navigate("/admin/login");
-    } catch (err) {
-      const errorMessage =
-        (err as unknown as { response?: { data?: { message?: string } } })
-          ?.response?.data?.message || "Logout failed";
-      toast.error(errorMessage);
-    }
+    await adminLogout();
+    dispatch(clearAdmin());
+    await persistor.flush();
+    localStorage.removeItem("persist:_auth");
+    persistor.persist();
+    toast.success("Logged out successfully");
+    navigate("/admin/login");
   };
 
   return (
     <aside
       className={cn(
-        "h-screen sticky top-0 transition-all duration-300 ease-in-out bg-[#2D3748] ",
+        "h-screen sticky top-0 transition-all duration-300 ease-in-out bg-[#282828] ",
         expanded ? "w-64" : "w-[70px]"
       )}
     >

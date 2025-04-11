@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { toast } from "sonner";
 import { Github } from "lucide-react";
 import { setUser } from "@/redux/slices/authSlice";
-import { googleOAuthLogin, signin } from "@/service/client/api/authApi";
+import { googleOAuthLogin, signin } from "@/service/client/api/clientApi";
 import { loginSchema } from "@/utils/validation/schemas";
 import { Navbar } from "@/components/client/layouts/Navbar";
 import { Footer } from "@/components/client/layouts/Footer";
@@ -15,11 +15,6 @@ import { SocialButton } from "@/components/shared/SocialButton";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/shared/Logo";
 import { ErrorResponse } from "@/types/error";
-// import {
-//   GoogleOAuthProvider,
-//   GoogleLogin,
-//   CredentialResponse,
-// } from "@react-oauth/google";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -28,7 +23,6 @@ export default function Login() {
   const signinMutation = useMutation({
     mutationFn: signin,
     onSuccess: (response) => {
-      console.log(response);
       if (response.success) {
         dispatch(setUser(response.user));
         toast.success(response.message);
@@ -56,21 +50,14 @@ export default function Login() {
     onSuccess: (data) => {
       if (data.success) {
         dispatch(setUser(data.user));
-        navigate("/=");
+        navigate("/");
       }
     },
     onError: (error: Error) => {
+      console.log("object");
       toast.error(error.message || "Google OAuth login failed");
     },
   });
-
-  // const handleGoogleSuccess = (credentialResponse: CredentialResponse) => {
-  //   if (credentialResponse.credential) {
-  //     googleOAuthMutation.mutate(credentialResponse.credential);
-  //   } else {
-  //     toast.error("Google login failed: Missing credential");
-  //   }
-  // };
 
   const handleGoogleLogin = () => {
     const state = btoa(Math.random().toString(36).substring(2));
@@ -224,15 +211,6 @@ export default function Login() {
                   text="Google"
                   disabled={signinMutation.isPending}
                 />
-                {/* <GoogleOAuthProvider
-                  clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}
-                >
-                  <GoogleLogin
-                    onSuccess={handleGoogleSuccess}
-                    onError={() => alert("Google login failed")}
-                    useOneTap
-                  />
-                </GoogleOAuthProvider> */}
               </div>
 
               <p className="text-sm pt-4 text-center">

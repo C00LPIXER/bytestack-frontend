@@ -9,7 +9,7 @@ import { RootState } from "@/redux/store";
 
 function AdminRoutes() {
   const { isAuthenticated } = useSelector(
-    (state: RootState) => state.adminAuth
+    (state: RootState) => state._auth
   );
   return (
     <Routes>

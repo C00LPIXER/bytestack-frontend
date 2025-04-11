@@ -2,6 +2,7 @@ import { JSX, useState } from "react";
 import { SearchBar } from "@/components/shared/SearchBar";
 import { BlogCard } from "./BlogCard";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface Tab {
   label: string;
@@ -72,12 +73,16 @@ export const BlogList = ({
               variant="ghost"
               className={`pb-1 sm:pb-2 px-2 sm:px-3 text-[10px] sm:text-xs md:text-sm whitespace-nowrap ${
                 activeTab === tab.value
-                  ? "border-b-2 border-black dark:border-white font-medium"
+                  ? "font-medium"
                   : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
               }`}
               onClick={() => handleTabChange(tab.value)}
             >
-              {tab.icon && <span className="mr-1 text-[10px] sm:text-xs md:text-sm">{tab.icon}</span>}
+              {tab.icon && (
+                <span className="mr-1 text-[10px] sm:text-xs md:text-sm">
+                  {tab.icon}
+                </span>
+              )}
               {tab.label}
             </Button>
           ))}
@@ -88,9 +93,11 @@ export const BlogList = ({
           <BlogCard key={post.id} {...post} />
         ))}
         <div className="text-center pt-4">
-          <Button className="w-full  bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 text-sm">
-            See all Blogs
-          </Button>
+          <Link to="/feeds">
+            <Button className="w-full  bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 text-sm">
+              See all Blogs
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,10 +1,6 @@
+import { User } from "@/types/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface User {
-  name: string;
-  email: string;
-  avatar: string;
-}
 
 interface AuthState {
   user: User | null;
@@ -12,7 +8,6 @@ interface AuthState {
     name: string;
     email: string;
     password: string;
-    otpShared: boolean;
   } | null;
 }
 
@@ -37,7 +32,6 @@ const authSlice = createSlice({
         name: string;
         email: string;
         password: string;
-        otpShared: boolean;
       }>
     ) {
       state.signupData = action.payload;

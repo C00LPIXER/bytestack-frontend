@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ClientRoutes from "./routes/client/ClientRoutes";
 import AdminRoutes from "./routes/admin/AdminRoutes";
 import ScrollToTop from "./utils/ScrollToTop";
-
+import { useEffect } from "react";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: { retry: false, staleTime: 5 * 60 * 1000 },
@@ -15,6 +15,19 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      document.body.removeAttribute("data-scroll-locked");
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["data-scroll-locked"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>

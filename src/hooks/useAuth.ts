@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setUser, clearUser } from "@/redux/slices/authSlice";
-import { fetchUser, logout as logoutApi } from "@/service/client/api/authApi";
+import { fetchUser, logout as logoutApi } from "@/service/client/api/clientApi";
 
 export const useAuth = () => {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ export const useAuth = () => {
       return userData;
     },
     enabled: !!user, // Only fetch if user is already in Redux
-    retry: false,
+    retry: false, 
     refetchOnMount: false, // Fetch on mount if enabled
     refetchOnWindowFocus: false, //automatic refetch when switching tabs
     refetchInterval: user ? 5 * 60 * 1000 : false, // 5 minutes if logged in
