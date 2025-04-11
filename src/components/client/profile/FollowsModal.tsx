@@ -12,6 +12,7 @@ import { Search } from "lucide-react";
 import { useDebounce } from "@/hooks/useDebounce";
 import Follows from "./Follows";
 import { getFollows } from "@/service/client/api/clientApi";
+import { Link } from "react-router-dom";
 
 // Type definitions
 interface User {
@@ -40,16 +41,22 @@ interface FetchTrigger {
 const PAGE_SIZE = 10;
 
 // User Item Component
-const UserItem = ({ user }: { user: User }) => (
+const UserItem = ({ user, close }: { user: User; close: () => void }) => (
   <div className="flex items-center gap-3 p-3 dark:hover:bg-[#ffffff23] hover:bg-gray-100">
-    <Avatar>
-      <AvatarImage src={user.avatar} alt={user.name} />
-      <AvatarFallback>{user.name[0]}</AvatarFallback>
-    </Avatar>
+    <Link to={`/u/${user.slug}`} onClick={close}>
+      <Avatar>
+        <AvatarImage src={user.avatar} alt={user.name} />
+        <AvatarFallback>{user.name[0]}</AvatarFallback>
+      </Avatar>
+    </Link>
+
     <div className="flex-1">
-      <p className="font-medium">{user.name}</p>
-      <p className="text-sm text-gray-500">@{user.slug}</p>
+      <Link to={`/u/${user.slug}`} onClick={close}>
+        <p className="font-medium">{user.name}</p>
+        <p className="text-sm text-gray-500">@{user.slug}</p>
+      </Link>
     </div>
+
     <Follows
       id={user._id}
       size="sm"
@@ -286,7 +293,9 @@ export const FollowsModal = ({
                   </p>
                 )}
               {allFollowers.map((user) => (
-                <UserItem key={user._id} user={user} />
+                // <Link to={`/u/${user.slug}`} onClick={onClose}>
+                <UserItem key={user._id} user={user} close={onClose} />
+                // </Link>
               ))}
               {isLoadingFollowers && (
                 <p className="p-3 text-center">Loading...</p>
@@ -319,7 +328,7 @@ export const FollowsModal = ({
                   </p>
                 )}
               {allFollowings.map((user) => (
-                <UserItem key={user._id} user={user} />
+                <UserItem key={user._id} user={user} close={onClose} />
               ))}
               {isLoadingFollowings && (
                 <p className="p-3 text-center">Loading...</p>

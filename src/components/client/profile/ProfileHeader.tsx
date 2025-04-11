@@ -178,7 +178,9 @@ export const ProfileHeader = ({
           <div className="flex justify-start gap-6 mb-4">
             <div
               className="flex items-center gap-2 text-left cursor-pointer"
-              onClick={() => handleTabOpen("followings")}
+              onClick={() => {
+                if (isCurrentUser) handleTabOpen("followings");
+              }}
             >
               <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
                 {formatNumber(followings)}
@@ -189,7 +191,9 @@ export const ProfileHeader = ({
             </div>
             <div
               className="flex items-center gap-2 text-left cursor-pointer"
-              onClick={() => handleTabOpen("followers")}
+              onClick={() => {
+                if (isCurrentUser) handleTabOpen("followers");
+              }}
             >
               <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
                 {formatNumber(followers)}
