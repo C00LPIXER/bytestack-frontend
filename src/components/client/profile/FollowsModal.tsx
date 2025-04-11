@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Dialog,
   DialogDescription,
@@ -64,7 +64,7 @@ export const FollowsModal = ({
     initialTab
   );
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearchQuery = useDebounce(searchQuery, 500); // 500ms debounce
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const [page, setPage] = useState(1);
   const [allFollowers, setAllFollowers] = useState<User[]>([]);
   const [allFollowings, setAllFollowings] = useState<User[]>([]);
@@ -80,9 +80,14 @@ export const FollowsModal = ({
     queryKey: ["followers", userId, debouncedSearchQuery, page],
     queryFn: () =>
       getFollows("followers", debouncedSearchQuery, page, PAGE_SIZE).then(
-        (res) => res as User[]
+        (res) => {
+          console.log("Followers data received for page", page, ":", res);
+          return res as User[];
+        }
       ),
-    enabled: isOpen && activeTab === "followers",
+    enabled: false, // Disable initial fetch
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   // Query for followings
@@ -96,9 +101,14 @@ export const FollowsModal = ({
     queryKey: ["followings", userId, debouncedSearchQuery, page],
     queryFn: () =>
       getFollows("followings", debouncedSearchQuery, page, PAGE_SIZE).then(
-        (res) => res as User[]
+        (res) => {
+          console.log("Followings data received for page", page, ":", res);
+          return res as User[];
+        }
       ),
-    enabled: isOpen && activeTab === "followings",
+    enabled: false, // Disable initial fetch
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   // Update accumulated data when new data is fetched
@@ -108,10 +118,11 @@ export const FollowsModal = ({
         const newUsers = followersData.filter(
           (newUser) => !prev.some((user) => user._id === newUser._id)
         );
-        return [...prev, ...newUsers];
+        console.log("New followers added for page", page, ":", newUsers);
+        return page === 1 ? followersData : [...prev, ...newUsers]; // Reset on page 1, append otherwise
       });
     }
-  }, [followersData, activeTab]);
+  }, [followersData, activeTab, page]);
 
   useEffect(() => {
     if (followingsData && activeTab === "followings") {
@@ -119,64 +130,67 @@ export const FollowsModal = ({
         const newUsers = followingsData.filter(
           (newUser) => !prev.some((user) => user._id === newUser._id)
         );
-        return [...prev, ...newUsers];
+        console.log("New followings added for page", page, ":", newUsers);
+        return page === 1 ? followingsData : [...prev, ...newUsers]; // Reset on page 1, append otherwise
       });
     }
-  }, [followingsData, activeTab]);
+  }, [followingsData, activeTab, page]);
 
-  // Refetch and reset on search or tab change
-  useEffect(() => {
+  // Initial fetch or refetch on tab change/search
+  const fetchInitialData = useCallback(() => {
     if (activeTab === "followers") {
       refetchFollowers();
-      if (debouncedSearchQuery || page > 1) {
-        setAllFollowers([]); // Reset only if searching or paginating
-        setPage(1);
-      }
     } else if (activeTab === "followings") {
       refetchFollowings();
-      if (debouncedSearchQuery || page > 1) {
-        setAllFollowings([]); // Reset only if searching or paginating
-        setPage(1);
-      }
     }
-  }, [
-    debouncedSearchQuery,
-    activeTab,
-    page,
-    refetchFollowers,
-    refetchFollowings,
-  ]);
+  }, [activeTab, refetchFollowers, refetchFollowings]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setAllFollowers([]);
+      setAllFollowings([]);
+      setPage(1);
+      fetchInitialData(); // Trigger fetch when modal opens
+    }
+  }, [isOpen, fetchInitialData]);
+
+  useEffect(() => {
+    if (debouncedSearchQuery || activeTab !== initialTab) {
+      setPage(1); // Reset page on search or tab change
+      fetchInitialData(); // Refetch with new search or tab
+    }
+  }, [debouncedSearchQuery, activeTab, initialTab, fetchInitialData]);
 
   // Handle page change (manual pagination)
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
+    console.log("Attempting to load more for", activeTab, "at page", page);
     if (
-      followersData?.length === PAGE_SIZE &&
-      activeTab === "followers" &&
-      !isLoadingFollowers
+      (followersData?.length === PAGE_SIZE &&
+        activeTab === "followers" &&
+        !isLoadingFollowers) ||
+      (followingsData?.length === PAGE_SIZE &&
+        activeTab === "followings" &&
+        !isLoadingFollowings)
     ) {
+      console.log("Loading next page for", activeTab, "to", page + 1);
       setPage((prev) => prev + 1);
-    } else if (
-      followingsData?.length === PAGE_SIZE &&
-      activeTab === "followings" &&
-      !isLoadingFollowings
-    ) {
-      setPage((prev) => prev + 1);
+    } else {
+      console.log("No more data or still fetching for", activeTab);
     }
-  };
+  }, [
+    activeTab,
+    followersData,
+    followingsData,
+    isLoadingFollowers,
+    isLoadingFollowings,
+    page,
+  ]);
 
   // Handle tab change
   const handleTabChange = (value: string) => {
     const newTab = value as "followers" | "followings";
     setActiveTab(newTab);
     setSearchQuery(""); // Reset search when switching tabs
-    setPage(1); // Reset page when switching tabs
-    setAllFollowers(newTab === "followers" ? [] : allFollowers); // Preserve data if same tab
-    setAllFollowings(newTab === "followings" ? [] : allFollowings); // Preserve data if same tab
-    if (newTab === "followers") {
-      refetchFollowers();
-    } else {
-      refetchFollowings();
-    }
   };
 
   return (
@@ -186,7 +200,7 @@ export const FollowsModal = ({
           Followers and Following list
         </DialogDescription>
         <Tabs
-          defaultValue={initialTab}
+          value={activeTab}
           className="w-full pt-4"
           onValueChange={handleTabChange}
         >
@@ -225,7 +239,7 @@ export const FollowsModal = ({
                   Error: {(followersError as Error)?.message}
                 </p>
               )}
-              {followersData?.length === PAGE_SIZE && (
+              {followersData?.length === PAGE_SIZE && !isLoadingFollowers && (
                 <button
                   onClick={handleNextPage}
                   className="w-full py-2 text-center text-blue-500 hover:underline"
@@ -254,7 +268,7 @@ export const FollowsModal = ({
                   Error: {(followingsError as Error)?.message}
                 </p>
               )}
-              {followingsData?.length === PAGE_SIZE && (
+              {followingsData?.length === PAGE_SIZE && !isLoadingFollowings && (
                 <button
                   onClick={handleNextPage}
                   className="w-full py-2 text-center text-blue-500 hover:underline"

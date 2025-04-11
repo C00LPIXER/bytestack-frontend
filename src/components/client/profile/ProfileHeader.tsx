@@ -72,7 +72,6 @@ export const ProfileHeader = ({
 
   return (
     <div className="mb-8 border-b border-gray-200 dark:border-gray-700 pb-6">
-      {/* Instagram-style header with consistent layout across devices */}
       <FollowsModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -90,9 +89,7 @@ export const ProfileHeader = ({
           </Avatar>
         </div>
 
-        {/* User info - taking up the rest of the space */}
         <div className="flex-1">
-          {/* Name and Action Buttons */}
           <div className="flex flex-row items-center gap-4 mb-1 justify-between">
             <h1 className="sm:text-2xl font-bold text-gray-900 dark:text-white text-left">
               {profile.name}
@@ -180,7 +177,7 @@ export const ProfileHeader = ({
           {/* Stats - followers, following, posts in a row */}
           <div className="flex justify-start gap-6 mb-4">
             <div
-              className="flex items-center gap-2 text-left"
+              className="flex items-center gap-2 text-left cursor-pointer"
               onClick={() => handleTabOpen("followings")}
             >
               <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
@@ -191,7 +188,7 @@ export const ProfileHeader = ({
               </span>
             </div>
             <div
-              className="flex items-center gap-2 text-left"
+              className="flex items-center gap-2 text-left cursor-pointer"
               onClick={() => handleTabOpen("followers")}
             >
               <span className="block font-bold text-gray-900 dark:text-white md:text-lg text-sm">
