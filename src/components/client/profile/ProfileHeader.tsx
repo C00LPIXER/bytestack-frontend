@@ -75,7 +75,7 @@ export const ProfileHeader = ({
       <FollowsModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        userId={profile._id}
+        // userId={profile._id}
         initialTab={tab}
       />
       <div className="flex flex-row items-start gap-8 mb-3">
