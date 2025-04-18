@@ -13,7 +13,8 @@ import AuthCallback from "@/pages/client/AuthCallback";
 import { Profile } from "@/pages/client/Profile";
 import Settings from "@/pages/client/Settings";
 import { FeedsPage } from "@/pages/client/Feeds";
-import EditorPage from "@/pages/client/Editor";
+import NewBlog from "@/pages/client/NewBlog";
+// import BlogPage from "@/pages/client/BlogPage";
 function ClientRoutes() {
   return (
     <AuthProvider>
@@ -32,7 +33,7 @@ function ClientRoutes() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/u/:slug" element={<Profile />} />
           <Route path="/feeds" element={<FeedsPage />} />
-          <Route path="/blog" element={<EditorPage />} />
+          <Route path="/new-write" element={<NewBlog />} />
         </Route>
 
         <Route path="*" element={<NotFount />} />

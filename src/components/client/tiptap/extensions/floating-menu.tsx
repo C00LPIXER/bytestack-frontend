@@ -255,12 +255,12 @@ export function TipTapFloatingMenu({ editor }: { editor: Editor }) {
           break;
 
         case "Enter":
-          preventDefault();
+          { preventDefault();
           const targetIndex = selectedIndex === -1 ? 0 : selectedIndex;
           if (flatFilteredItems[targetIndex]) {
             executeCommand(flatFilteredItems[targetIndex].command);
           }
-          break;
+          break; }
 
         case "Escape":
           preventDefault();

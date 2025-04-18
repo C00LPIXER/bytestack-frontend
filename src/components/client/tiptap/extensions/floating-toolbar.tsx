@@ -8,14 +8,14 @@ import { LinkToolbar } from "../toolbars/link";
 import { ColorHighlightToolbar } from "../toolbars/color-and-highlight";
 import { ToolbarProvider } from "../toolbars/toolbar-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useMediaQuery } from "@/hooks/use-media-querry";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { HeadingsToolbar } from "../toolbars/headings";
 import { BulletListToolbar } from "../toolbars/bullet-list";
 import { OrderedListToolbar } from "../toolbars/ordered-list";
 import { ImagePlaceholderToolbar } from "../toolbars/image-placeholder-toolbar";
-import { AlignmentTooolbar } from "../toolbars/alignment";
+import { AlignmentToolbar } from "../toolbars/alignment"; 
 import { BlockquoteToolbar } from "../toolbars/blockquote";
 import { useEffect } from "react";
 
@@ -77,7 +77,7 @@ export function FloatingToolbar({ editor }: { editor: Editor | null }) {
                   <Separator orientation="vertical" className="h-6 mx-1" />
 
                   {/* Additional controls */}
-                  <AlignmentTooolbar />
+                  <AlignmentToolbar />
                   <BlockquoteToolbar />
                 </div>
               </div>

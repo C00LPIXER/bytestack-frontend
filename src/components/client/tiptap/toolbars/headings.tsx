@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useToolbar } from "./toolbar-provider";
-import { useMediaQuery } from "@/hooks/use-media-querry";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { MobileToolbarGroup, MobileToolbarItem } from "./mobile-toolbar-group";
 
 const levels = [1, 2, 3, 4] as const;

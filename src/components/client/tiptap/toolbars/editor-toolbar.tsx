@@ -16,7 +16,7 @@ import { LinkToolbar } from "./link";
 import { BulletListToolbar } from "./bullet-list";
 import { OrderedListToolbar } from "./ordered-list";
 import { HorizontalRuleToolbar } from "./horizontal-rule";
-import { AlignmentTooolbar } from "./alignment";
+import { AlignmentToolbar } from "./alignment";
 import { ImagePlaceholderToolbar } from "./image-placeholder-toolbar";
 import { ColorHighlightToolbar } from "./color-and-highlight";
 import { SearchAndReplaceToolbar } from "./search-and-replace-toolbar";
@@ -57,7 +57,7 @@ export const EditorToolbar = ({ editor }: { editor: Editor }) => {
                 <Separator orientation="vertical" className="mx-1 h-7" />
 
                 {/* Alignment Group */}
-                <AlignmentTooolbar />
+                <AlignmentToolbar />
                 <Separator orientation="vertical" className="mx-1 h-7" />
 
                 {/* Media & Styling Group */}

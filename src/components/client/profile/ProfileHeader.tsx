@@ -12,6 +12,7 @@ import {
   BellOff,
   MoreVerticalIcon,
   Linkedin,
+  Edit,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
@@ -105,6 +106,11 @@ export const ProfileHeader = ({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                      <Link to="/new-write" className="flex items-center">
+                        <Edit className="h-4 w-4 mr-2" /> Write
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link to="/settings" className="flex items-center">
                         <Settings className="h-4 w-4 mr-2" />

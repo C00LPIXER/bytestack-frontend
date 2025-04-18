@@ -1,6 +1,7 @@
 import { clientAxiosInstance } from "@/api/clientAxios";
 import { clearUser } from "@/redux/slices/authSlice";
 import { store } from "@/redux/store";
+import { BlogPostData } from "@/types/blog";
 import { ErrorResponse } from "@/types/error";
 import { BloggerData } from "@/types/feed";
 import { User } from "@/types/user";
@@ -178,5 +179,10 @@ export const getFollows = async (
     `/profile/relation/${type}?page=${page}&search=${query}&limit=${pageSize}`
   );
 
+  return response.data;
+};
+
+export const newBlog = async (blog: BlogPostData): Promise<BlogPostData> => {
+  const response = await clientAxiosInstance.post("/blog", blog);
   return response.data;
 };

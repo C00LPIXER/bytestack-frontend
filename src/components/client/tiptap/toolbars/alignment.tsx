@@ -1,5 +1,3 @@
-"use client";
-
 import {
   AlignCenter,
   AlignJustify,
@@ -8,7 +6,7 @@ import {
   Check,
   ChevronDown,
 } from "lucide-react";
-import { useMediaQuery } from "@/hooks/use-media-querry";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { MobileToolbarGroup, MobileToolbarItem } from "./mobile-toolbar-group";
 
 import { Button } from "@/components/ui/button";
@@ -26,7 +24,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useToolbar } from "./toolbar-provider";
 
-export const AlignmentTooolbar = () => {
+export const AlignmentToolbar = () => {
   const { editor } = useToolbar();
   const isMobile = useMediaQuery("(max-width: 640px)");
   const handleAlign = (value: string) => {
@@ -34,7 +32,7 @@ export const AlignmentTooolbar = () => {
   };
 
   const isDisabled =
-    editor?.isActive("image") ?? editor?.isActive("video") ?? !editor ?? false;
+    !editor || !(editor.isActive("image") || editor.isActive("video"));
 
   const currentTextAlign = () => {
     if (editor?.isActive({ textAlign: "left" })) {
@@ -82,8 +80,10 @@ export const AlignmentTooolbar = () => {
 
   if (isMobile) {
     return (
-      <MobileToolbarGroup 
-        label={alignmentOptions[findIndex(currentTextAlign())]?.name ?? "Left Align"}
+      <MobileToolbarGroup
+        label={
+          alignmentOptions[findIndex(currentTextAlign())]?.name ?? "Left Align"
+        }
       >
         {alignmentOptions.map((option, index) => (
           <MobileToolbarItem
