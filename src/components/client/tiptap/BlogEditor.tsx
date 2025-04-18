@@ -157,7 +157,10 @@ const RichTextEditor = forwardRef<
       )}
     >
       <div className="flex flex-col lg:flex-row">
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 overflow-y-auto max-h-[calc(100vh-4rem)] scrollbar-hide ms-overflow-style-none">
+          <style>
+            {`.scrollbar-hide::-webkit-scrollbar {\n              display: none;\n            }`}
+          </style>
           <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <EditorToolbar editor={handleEditor} />
           </div>
@@ -170,8 +173,8 @@ const RichTextEditor = forwardRef<
             />
           </div>
         </div>
-        <div className="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-border bg-muted/50">
-          <div className="sticky top-0 p-4 sm:p-6">
+        <div className="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-border bg-muted/50 lg:sticky lg:top-0">
+          <div className="p-4 sm:p-6">
             <h3 className="text-lg font-semibold mb-4">Blog Details</h3>
             <BlogFormInputs
               onChange={(data) => {
@@ -188,7 +191,7 @@ const RichTextEditor = forwardRef<
     </div>
   );
 });
-
 RichTextEditor.displayName = "RichTextEditor";
 
 export { RichTextEditor };
+

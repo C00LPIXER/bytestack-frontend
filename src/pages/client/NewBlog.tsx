@@ -4,7 +4,6 @@ import {
   RichTextEditor,
   BlogFormData,
 } from "@/components/client/tiptap/BlogEditor";
-import { toast } from "sonner";
 import { newBlog } from "@/service/client/api/clientApi";
 import { Editor } from "@tiptap/react";
 import { BlogPostData } from "@/types/blog";
@@ -29,15 +28,6 @@ const NewBlog = () => {
   };
 
   const handleSubmit = async () => {
-    if (!formData.title.trim()) {
-      toast.error("Title is required");
-      return;
-    }
-    if (!formData.content.trim()) {
-      toast.error("Content is required");
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       const payload: BlogPostData = {
@@ -45,12 +35,7 @@ const NewBlog = () => {
       };
 
       await newBlog(payload);
-      toast.success(
-        `Blog post ${
-          formData.status === "draft" ? "saved as draft" : "published"
-        } successfully`
-      );
-
+      // Reset form after successful submission
       setFormData({
         title: "",
         slug: "",
@@ -65,21 +50,18 @@ const NewBlog = () => {
       editorRef.current?.commands.clearContent();
     } catch (error) {
       console.error("Error creating blog:", error);
-      toast.error("Failed to create blog post. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleFormChange = (data: BlogFormData) => {
-    console.log(data);
     setFormData(data);
   };
 
-
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col space-y-6">
           <div className="flex flex-col space-y-2">
             <h1 className="text-3xl font-bold text-foreground">
