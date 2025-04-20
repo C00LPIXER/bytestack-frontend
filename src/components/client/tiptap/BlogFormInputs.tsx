@@ -10,7 +10,6 @@ import React from "react";
 interface BlogFormInputsProps {
   onChange: (data: {
     title: string;
-    slug: string;
     metaDescription: string;
     tags: string[];
     topics: string[];
@@ -22,7 +21,6 @@ interface BlogFormInputsProps {
   isSubmitting?: boolean;
   initialData?: {
     title?: string;
-    slug?: string;
     metaDescription?: string;
     tags?: string[];
     topics?: string[];
@@ -37,11 +35,6 @@ const validationSchema = Yup.object().shape({
     .required("Title is required")
     .min(3, "Title must be at least 3 characters")
     .max(100, "Title must be less than 100 characters"),
-  slug: Yup.string()
-    .required("Slug is required")
-    .matches(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and hyphens")
-    .min(3, "Slug must be at least 3 characters")
-    .max(100, "Slug must be less than 100 characters"),
   metaDescription: Yup.string()
     .required("Meta description is required")
     .max(160, "Meta description must be less than 160 characters"),
@@ -65,7 +58,6 @@ export const BlogFormInputs = ({
   const formik = useFormik({
     initialValues: {
       title: initialData?.title || "",
-      slug: initialData?.slug || "",
       metaDescription: initialData?.metaDescription || "",
       tags: initialData?.tags || [],
       topics: initialData?.topics || [],
@@ -139,22 +131,6 @@ export const BlogFormInputs = ({
         />
         {formik.touched.title && formik.errors.title && (
           <div className="text-sm text-red-500">{formik.errors.title}</div>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="slug">Slug</Label>
-        <Input
-          id="slug"
-          name="slug"
-          value={formik.values.slug}
-          onChange={handleChange}
-          onBlur={formik.handleBlur}
-          placeholder="Enter slug"
-          className="w-full"
-        />
-        {formik.touched.slug && formik.errors.slug && (
-          <div className="text-sm text-red-500">{formik.errors.slug}</div>
         )}
       </div>
 

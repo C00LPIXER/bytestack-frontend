@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/client/layouts/Navbar";
 import { Sidebar } from "@/components/client/layouts/Sidebar";
 import { Footer } from "@/components/client/layouts/Footer";
-import { BlogPostData } from "@/types/blog";
+import { BlogPost } from "@/types/blog";
 import { BloggerData, TopicData, FeedType } from "@/types/feed";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -12,7 +12,7 @@ import { SearchBar } from "@/components/shared/SearchBar";
 import { Pagination } from "@/components/shared/Pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 
-const blogPosts: BlogPostData[] = [
+const blogPosts: BlogPost[] = [
   {
     id: "1",
     author: {
@@ -146,9 +146,7 @@ export const FeedsPage = () => {
               {displayedItems.length > 0 ? (
                 displayedItems.map((item) => {
                   if ("title" in item) {
-                    return (
-                      <BlogCard key={item.id} {...(item as BlogPostData)} />
-                    );
+                    return <BlogCard key={item.id} {...(item as BlogPost)} />;
                   } else if ("name" in item && "_id" in item) {
                     return (
                       <BloggerCard

@@ -28,7 +28,6 @@ import { BlogFormInputs } from "./BlogFormInputs";
 
 export interface BlogFormData {
   title: string;
-  slug: string;
   content: string;
   metaDescription: string;
   tags: string[];
@@ -97,7 +96,6 @@ const RichTextEditor = forwardRef<
     isSubmitting?: boolean;
     initialData?: {
       title?: string;
-      slug?: string;
       content?: string;
       metaDescription?: string;
       tags?: string[];
@@ -112,7 +110,6 @@ const RichTextEditor = forwardRef<
   const editor = useRef<Editor | null>(null);
   const [formData, setFormData] = useState<BlogFormData>({
     title: initialData?.title || "",
-    slug: initialData?.slug || "",
     content: initialData?.content || "",
     metaDescription: initialData?.metaDescription || "",
     tags: initialData?.tags || [],
@@ -152,19 +149,19 @@ const RichTextEditor = forwardRef<
     <div
       ref={ref}
       className={cn(
-        "relative border bg-card rounded-lg shadow-sm overflow-hidden",
+        "relative border m-auto bg-card max-w-[80%] rounded-lg shadow-sm overflow-hidden",
         className
       )}
     >
       <div className="flex flex-col lg:flex-row">
-        <div className="flex-1 min-w-0 overflow-y-auto max-h-[calc(100vh-4rem)] scrollbar-hide ms-overflow-style-none">
+        <div className="flex-1 overflow-y-auto max-h-[calc(100vh-4rem)] scrollbar-hide ms-overflow-style-none">
           <style>
             {`.scrollbar-hide::-webkit-scrollbar {\n              display: none;\n            }`}
           </style>
           <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <EditorToolbar editor={handleEditor} />
           </div>
-          <div className="p-4 sm:p-6">
+          <div className="p-4 sm:p-6 ">
             <FloatingToolbar editor={handleEditor} />
             <TipTapFloatingMenu editor={handleEditor} />
             <EditorContent

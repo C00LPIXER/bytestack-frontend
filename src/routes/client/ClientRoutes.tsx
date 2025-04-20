@@ -14,6 +14,7 @@ import { Profile } from "@/pages/client/Profile";
 import Settings from "@/pages/client/Settings";
 import { FeedsPage } from "@/pages/client/Feeds";
 import NewBlog from "@/pages/client/NewBlog";
+import BlogPost from "@/pages/client/BlogPost";
 // import BlogPage from "@/pages/client/BlogPage";
 function ClientRoutes() {
   return (
@@ -37,6 +38,7 @@ function ClientRoutes() {
         </Route>
 
         <Route path="*" element={<NotFount />} />
+        <Route path="/blog" element={<BlogPost />} />
       </Routes>
     </AuthProvider>
   );

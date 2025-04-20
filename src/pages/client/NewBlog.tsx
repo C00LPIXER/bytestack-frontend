@@ -1,4 +1,3 @@
-"use client";
 import { useState, useRef } from "react";
 import {
   RichTextEditor,
@@ -7,13 +6,15 @@ import {
 import { newBlog } from "@/service/client/api/clientApi";
 import { Editor } from "@tiptap/react";
 import { BlogPostData } from "@/types/blog";
+import { Navbar } from "@/components/client/layouts/Navbar";
+import { Footer } from "@/components/client/layouts/Footer";
+import { toast } from "sonner";
 
 const NewBlog = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef<Editor | null>(null);
   const [formData, setFormData] = useState<BlogFormData>({
     title: "",
-    slug: "",
     content: "",
     metaDescription: "",
     tags: [],
@@ -31,14 +32,13 @@ const NewBlog = () => {
     setIsSubmitting(true);
     try {
       const payload: BlogPostData = {
-        ...formData
+        ...formData,
       };
 
       await newBlog(payload);
-      // Reset form after successful submission
+      toast.success("")
       setFormData({
         title: "",
-        slug: "",
         content: "",
         metaDescription: "",
         tags: [],
@@ -60,18 +60,21 @@ const NewBlog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col space-y-6">
-          <div className="flex flex-col space-y-2">
-            <h1 className="text-3xl font-bold text-foreground">
-              Create New Blog Post
-            </h1>
-            <p className="text-muted-foreground">
-              Write and publish your next blog post
-            </p>
+    <>
+      <Navbar />
+      <div className="min-h-screen pt-16 bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col space-y-6">
+            <div className="flex flex-col space-y-2">
+              <h1 className="text-3xl font-bold text-foreground">
+                Create New Blog Post
+              </h1>
+              <p className="text-muted-foreground">
+                Write and publish your next blog post
+              </p>
+            </div>
           </div>
-          
+
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="flex-1">
               <RichTextEditor
@@ -86,7 +89,8 @@ const NewBlog = () => {
           </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

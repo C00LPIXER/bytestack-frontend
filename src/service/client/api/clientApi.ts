@@ -5,6 +5,7 @@ import { BlogPostData } from "@/types/blog";
 import { ErrorResponse } from "@/types/error";
 import { BloggerData } from "@/types/feed";
 import { User } from "@/types/user";
+import { toast } from "sonner";
 interface ApiResponse {
   message: string;
   success: boolean;
@@ -116,6 +117,7 @@ export const fetchUser = async (): Promise<User | null> => {
       (error as ErrorResponse).response?.status === 401 ||
       (error as ErrorResponse).response?.status === 403
     ) {
+      toast.error((error as ErrorResponse).message);
       store.dispatch(clearUser());
       window.location.href = "/login";
     }
@@ -184,5 +186,12 @@ export const getFollows = async (
 
 export const newBlog = async (blog: BlogPostData): Promise<BlogPostData> => {
   const response = await clientAxiosInstance.post("/blog", blog);
+  return response.data;
+};
+
+export const getBlogBySlug = async (
+  slug: string
+): Promise<{ data: BlogPostData }> => {
+  const response = await clientAxiosInstance.get(`/blog/${slug}`);
   return response.data;
 };
