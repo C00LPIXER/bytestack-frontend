@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { follow, unfollow } from "@/service/client/api/clientApi";
-import { ProfileResponse } from "@/service/client/api/clientApi";
+import { follow, unfollow } from "@/service/api/clientApi";
+import { ProfileResponse } from "@/service/api/clientApi";
 
 export const useFollowUser = () => {
   const queryClient = useQueryClient();

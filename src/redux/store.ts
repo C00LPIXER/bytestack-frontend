@@ -3,7 +3,6 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { encryptTransform } from "redux-persist-transform-encrypt";
 import authReducer from "./slices/authSlice";
-import adminAuthReducer from "./slices/adminAuthSlice";
 
 const encryptor = encryptTransform({
   secretKey: import.meta.env.VITE_REDUX_PERSIST_SECRET_KEY,
@@ -14,12 +13,11 @@ const persistConfig = {
   key: "root",
   storage,
   transforms: [encryptor],
-  whitelist: ["auth", "_auth"],
+  whitelist: ["auth"],
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  _auth: adminAuthReducer,
 });
 
 const persistedReducer = persistReducer<ReturnType<typeof rootReducer>>(

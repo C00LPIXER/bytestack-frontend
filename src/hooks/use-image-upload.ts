@@ -1,7 +1,9 @@
-"use client";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
-import { uploadImage, UploadImageParams } from "@/service/client/service/imageUploadService";
+import {
+  uploadImage,
+  UploadImageParams,
+} from "@/service/service/imageUploadService";
 
 interface UseImageUploadProps {
   onUpload: (imageUrl: string) => void;
@@ -13,7 +15,9 @@ export const useImageUpload = ({ onUpload }: UseImageUploadProps) => {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 

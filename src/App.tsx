@@ -4,8 +4,7 @@ import { persistor, store } from "./redux/store";
 import { Toaster } from "sonner";
 import { PersistGate } from "redux-persist/integration/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ClientRoutes from "./routes/client/ClientRoutes";
-import AdminRoutes from "./routes/admin/AdminRoutes";
+import ClientRoutes from "./routes/Routes";
 import ScrollToTop from "./utils/ScrollToTop";
 import { useEffect } from "react";
 const queryClient = new QueryClient({
@@ -37,7 +36,6 @@ function App() {
             <Toaster position="bottom-right" closeButton />
             <Routes>
               <Route path="/*" element={<ClientRoutes />} />
-              <Route path="/admin/*" element={<AdminRoutes />} />
             </Routes>
           </Router>
         </PersistGate>
